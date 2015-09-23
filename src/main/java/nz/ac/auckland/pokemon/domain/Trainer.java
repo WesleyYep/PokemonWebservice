@@ -3,7 +3,10 @@ package nz.ac.auckland.pokemon.domain;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Bean class to represent a Trainer.
@@ -27,6 +30,13 @@ public class Trainer {
 	private Gender gender;
 	@Temporal( TemporalType.DATE )
 	private Date dateOfBirth;
+
+	@OneToMany(mappedBy = "trainer")
+	private List<Pokemon> pokemon = new ArrayList<Pokemon>();
+
+    public Trainer() {
+
+    }
 
 	public Trainer(long id, String lastName, String firstName, Gender gender, Date dateOfBirth) {
 		this.id = id;
@@ -76,4 +86,13 @@ public class Trainer {
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth.toDateTimeAtStartOfDay().toDate();
 	}
+
+	public List<Pokemon> getPokemon() {
+		return pokemon;
+	}
+
+	public void setPokemon(List<Pokemon> pokemon) {
+		this.pokemon = pokemon;
+	}
+
 }

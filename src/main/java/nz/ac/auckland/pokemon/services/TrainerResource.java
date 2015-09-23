@@ -108,7 +108,6 @@ public class TrainerResource {
         trainer.setGender(trainerDTO.getGender());
         trainer.setDateOfBirth(trainerDTO.getDateOfBirth());
 
-        //em.persist(trainer);
 		em.getTransaction().commit();
 		_logger.debug("Updated trainer: " + trainer);
         return Response.created(URI.create("/trainers/" + trainer.getId()))

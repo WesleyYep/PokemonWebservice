@@ -8,10 +8,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import nz.ac.auckland.pokemon.domain.Gender;
-import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-import nz.ac.auckland.pokemon.services.TrainerMapper;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -69,7 +66,7 @@ public class TrainerResourceTest
             // Close the connection to the Web service.
             response.close();
 
-
+            TestConstants.trainerId = id;
             // Query the Web service for the new Trainer. Send a HTTP GET request.
             _logger.info("Querying the Trainer ...");
             TrainerDTO trainerDTO = client.target(location).request().get(TrainerDTO.class);
@@ -85,7 +82,7 @@ public class TrainerResourceTest
             response = client.target(location).request().put(Entity.xml(updateTrainer));
             status = response.getStatus();
             if (status != 201) {
-                _logger.error("Failed to create Trainer; Web service responded with: " + status);
+                _logger.error("Failed to update Trainer; Web service responded with: " + status);
                 fail();
             }
 
