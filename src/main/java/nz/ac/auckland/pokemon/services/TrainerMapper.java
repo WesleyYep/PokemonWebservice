@@ -1,5 +1,6 @@
 package nz.ac.auckland.pokemon.services;
 
+import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import org.joda.time.LocalDate;
@@ -18,7 +19,7 @@ public class TrainerMapper {
 				dtoTrainer.getLastName(),
 				dtoTrainer.getFirstName(),
 				dtoTrainer.getGender(),
-				dtoTrainer.getDateOfBirth().toDateTimeAtStartOfDay().toDate());
+				dtoTrainer.getDateOfBirth().toDateTimeAtStartOfDay().toDate(), new Record());
 		return trainer;
 	}
 	

@@ -14,9 +14,9 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 /**
- * Implementation of the TrainerResource interface.
+ * Webservice methods related to Pokemon creating, modifying, and catching
  *
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 @Path("/pokemon")
@@ -25,17 +25,10 @@ public class PokemonResource {
 	private static Logger _logger = LoggerFactory.getLogger(PokemonResource.class);
 	private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 			.createEntityManager();
-	// Thread-safe data structure. This is necessary because a single
-	// TrainerResourceImpl instance will be created and used to handle all
-	// incoming requests. The JAX-RS implementation uses a thread-per-request
-	// model and so concurrent requests will concurrently access the
-	// TrainerResourceImpl object.
-	//private Map<Integer, Trainer> trainerDB = new ConcurrentHashMap<Integer, Trainer>();
-	//private AtomicInteger _idCounter = new AtomicInteger();
 
 	/**
-	 * Adds a new Parolee to the system. The state of the new Parolee is
-	 * described by a nz.ac.auckland.parolee.dto.Parolee object.
+	 * Adds a new Pokemon to the system. The state of the new Pokemon is
+	 * described by a nz.ac.auckland.pokemon.dto.PokemonDTO object.
 	 *
 	 * @param pokemonDTO
 	 *            the Parolee data included in the HTTP request body.
@@ -47,8 +40,6 @@ public class PokemonResource {
 		em.getTransaction().begin();
 
 		Pokemon pokemon = PokemonMapper.toDomainModel(pokemonDTO);
-	//	pokemon.setId(_idCounter.incrementAndGet());
-	//	trainerDB.put(pokemon.getId(), pokemon);
 		em.persist(pokemon);
 		em.getTransaction().commit();
 
@@ -58,7 +49,7 @@ public class PokemonResource {
 	}
 
 	/**
-	 * Handles incoming HTTP GET requests for the relative URI "trainers/{id}.
+	 * Handles incoming HTTP GET requests for the relative URI "pokemon/{id}.
 	 * @param id the unique id of the Trainer to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
 	 *         Trainer in XML format.

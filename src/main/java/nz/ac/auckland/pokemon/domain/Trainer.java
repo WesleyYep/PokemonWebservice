@@ -11,7 +11,7 @@ import java.util.*;
  * For this first Web service, a Trainer is simply represented by a unique id,
  * a name, gender and date of birth.
  *
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 
@@ -39,17 +39,20 @@ public class Trainer {
 	)
 	private Set<Trainer> contacts = new HashSet<Trainer>();
 
-    public Trainer() {
+	@Embedded
+	private Record record;
 
-    }
+	public Trainer() {
 
-	public Trainer(long id, String lastName, String firstName, Gender gender, Date dateOfBirth) {
+	}
+
+	public Trainer(long id, String lastName, String firstName, Gender gender, Date dateOfBirth, Record record) {
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
-//		_associates = new HashSet<Parolee>();
+		this.record = record;
 	}
 
 	public long getId() {
@@ -100,8 +103,20 @@ public class Trainer {
 		this.pokemon = pokemon;
 	}
 
-    public void addContact(Trainer t) {
-        contacts.add(t);
-    }
+	public void addContact(Trainer t) {
+		contacts.add(t);
+	}
+
+	public void addToRecord(Battle b) {
+		record.addBattle(b);
+	}
+
+	public Record getRecord() {
+		return record;
+	}
+
+	public void setRecord(Record record) {
+		this.record = record;
+	}
 
 }

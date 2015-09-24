@@ -31,20 +31,21 @@ public class PokemonApplication extends Application
    
    public PokemonApplication()
    {
-      singletons.add(new TrainerResource());
-      singletons.add(new PokemonResource());
-      components.add(Auditor.class);
+	  singletons.add(new TrainerResource());
+	  singletons.add(new PokemonResource());
+	  singletons.add(new BattleResource());
+	  components.add(Auditor.class);
    }
 
    @Override
    public Set<Object> getSingletons()
    {
-      return singletons;
+	  return singletons;
    }
    
    @Override
    public Set<Class<?>> getClasses()
    {
-      return components;
+	  return components;
    }
 }
