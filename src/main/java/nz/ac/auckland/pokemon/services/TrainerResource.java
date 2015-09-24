@@ -31,13 +31,6 @@ public class TrainerResource {
 	private static Logger _logger = LoggerFactory.getLogger(TrainerResource.class);
 	private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 			.createEntityManager();
-	// Thread-safe data structure. This is necessary because a single
-	// TrainerResourceImpl instance will be created and used to handle all
-	// incoming requests. The JAX-RS implementation uses a thread-per-request
-	// model and so concurrent requests will concurrently access the
-	// TrainerResourceImpl object.
-	//private Map<Integer, Trainer> trainerDB = new ConcurrentHashMap<Integer, Trainer>();
-	//private AtomicInteger _idCounter = new AtomicInteger();
 
 	/**
 	 * Adds a new Trainer to the system. The state of the new Trainer is
@@ -103,16 +96,40 @@ public class TrainerResource {
 		Trainer trainer = em.find(Trainer.class, id);
 
 		// Update the details of the Trainer to be updated.
-        trainer.setFirstName(trainerDTO.getFirstName());
-        trainer.setLastName(trainerDTO.getLastName());
-        trainer.setGender(trainerDTO.getGender());
-        trainer.setDateOfBirth(trainerDTO.getDateOfBirth());
+		trainer.setFirstName(trainerDTO.getFirstName());
+		trainer.setLastName(trainerDTO.getLastName());
+		trainer.setGender(trainerDTO.getGender());
+		trainer.setDateOfBirth(trainerDTO.getDateOfBirth());
 
 		em.getTransaction().commit();
 		_logger.debug("Updated trainer: " + trainer);
+		return Response.created(URI.create("/trainers/" + trainer.getId()))
+				.build();
+	}
+
+    /**
+     * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}/{contact_id}.
+     * a XML representation of the updated Trainer.
+     * This method is used to add contacts between trainers
+     */
+    @PUT
+    @Path("{id}/{contact_id}")
+    @Consumes("application/xml")
+    public Response addTrainerContact (@PathParam("id") long id, @PathParam("contact_id") long contactId) {
+        _logger.debug("Retrieving trainer: " + id + " and contact: " + contactId);
+        em.getTransaction().begin();
+        // Get the full Parolee object from the database.
+        Trainer trainer = em.find(Trainer.class, id);
+        Trainer contact = em.find(Trainer.class, contactId);
+
+        // Update the contacts of the Trainer to be updated.
+        trainer.addContact(contact);
+
+        em.getTransaction().commit();
+        _logger.debug("Updated trainer contact");
         return Response.created(URI.create("/trainers/" + trainer.getId()))
                 .build();
-	}
+    }
 
 
 }

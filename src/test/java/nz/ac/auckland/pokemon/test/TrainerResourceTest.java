@@ -86,23 +86,29 @@ public class TrainerResourceTest
                 fail();
             }
 
-            // Extract location header from the HTTP response message. This should
-            // give the URI for the newly created Trainer.
-            location = response.getLocation().toString();
-            _logger.info("URI for updated Trainer: " + location);
-            array = location.split("/");
-            id = Integer.parseInt(array[array.length-1]);
-            _logger.info("ID for updated Trainer: " + id);
             response.close();
 
-            // Query the Web service for the new Trainer. Send a HTTP GET request.
-            _logger.info("Querying the updated Trainer ...");
-            trainerDTO = client.target(location).request().get(TrainerDTO.class);
-            // Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
-            _logger.info("Retrieved Trainer:\n" + trainerDTO.toString());
+
+            //now add a new trainer and test adding a contact
+            TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12));
+            response = client.target("http://localhost:10000/services/trainers")
+                    .request().post(Entity.xml(brock));
+            status = response.getStatus();
+            if (status != 201) {
+                _logger.error("Failed to create Trainer; Web service responded with: " + status);
+                fail();
+            }
+            location = response.getLocation().toString() + "/" + TestConstants.trainerId;
+            _logger.debug("Trying to update contact at location: " + location);
+            response.close();
+            response = client.target(location).request().put(null);
+            status = response.getStatus();
+            if (status != 201) {
+                _logger.error("Failed to add contact; Web service responded with: " + status);
+                fail();
+            }
 
         } finally {
-            // Release any connection resources.
             client.close();
         }
     }

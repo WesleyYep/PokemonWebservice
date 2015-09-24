@@ -1,12 +1,14 @@
 package nz.ac.auckland.pokemon.dto;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.Move;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
 
 import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.*;
+import java.util.Set;
 
 /* Class to represent a Trainer.
  *
@@ -34,6 +36,10 @@ public class PokemonDTO {
 	@XmlElement(name="level")
 	private int level;
 
+    @XmlElementWrapper(name = "moves")
+	@XmlElement(name = "move")
+	private Set<Move> moves;
+
 	protected PokemonDTO() {
 
 	}
@@ -47,8 +53,8 @@ public class PokemonDTO {
 	 * which is optional (not all Trainers are subject to a curfew).
      *
 	 */
-	public PokemonDTO(String lastName, String firstName, Gender gender, int level) throws IllegalArgumentException {
-		this(0, lastName, firstName, gender, level);
+	public PokemonDTO(String lastName, String firstName, Gender gender, int level, Set<Move> moves) throws IllegalArgumentException {
+		this(0, lastName, firstName, gender, level, moves);
 	}
 
 	/**
@@ -57,12 +63,13 @@ public class PokemonDTO {
 	 * implementation when creating a DTO Parolee from a domain-model Parolee
 	 * object.
 	 */
-	public PokemonDTO(long id, String lastName, String firstName, Gender gender, int level) {
+	public PokemonDTO(long id, String lastName, String firstName, Gender gender, int level, Set<Move> moves) {
 		this.id = id;
 		this.name = lastName;
 		this.nickname = firstName;
 		this.gender = gender;
 		this.level = level;
+        this.moves = moves;
 	}
 
 	public long getId() {
@@ -100,7 +107,14 @@ public class PokemonDTO {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
+
+    public Set<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(Set<Move> moves) {
+        this.moves = moves;
+    }
 
 	@Override
 	public String toString() {

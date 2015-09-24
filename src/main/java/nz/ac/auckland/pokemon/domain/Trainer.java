@@ -3,10 +3,7 @@ package nz.ac.auckland.pokemon.domain;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Bean class to represent a Trainer.
@@ -33,6 +30,14 @@ public class Trainer {
 
 	@OneToMany(mappedBy = "trainer")
 	private List<Pokemon> pokemon = new ArrayList<Pokemon>();
+
+	@ManyToMany
+	@JoinTable(
+			name = "TRAINER_CONTACTS",
+			joinColumns = @JoinColumn(name = "TRAINER_ID"),
+			inverseJoinColumns = @JoinColumn(name = "OTHER_ID")
+	)
+	private Set<Trainer> contacts = new HashSet<Trainer>();
 
     public Trainer() {
 
@@ -94,5 +99,9 @@ public class Trainer {
 	public void setPokemon(List<Pokemon> pokemon) {
 		this.pokemon = pokemon;
 	}
+
+    public void addContact(Trainer t) {
+        contacts.add(t);
+    }
 
 }

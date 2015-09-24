@@ -86,6 +86,7 @@ public class PokemonResource {
 	/**
 	 * Handles incoming HTTP PUT requests for the relative URI "pokemon/{id}.
 	 * a XML representation of the updated Trainer.
+	 * This is a standard PUT request that updates the pokemon
 	 */
 	@PUT
 	@Path("{id}")
@@ -93,14 +94,15 @@ public class PokemonResource {
 	public Response updatePokemon(@PathParam("id") long id, PokemonDTO pokemonDTO) {
 		_logger.debug("Retrieving pokemon: " + id);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Pokemon object from the database.
 		Pokemon pokemon = em.find(Pokemon.class, id);
 
-		// Update the details of the Trainer to be updated.
+		// Update the details of the Pokemon to be updated.
         pokemon.setName(pokemonDTO.getName());
         pokemon.setNickname(pokemonDTO.getNickname());
         pokemon.setGender(pokemonDTO.getGender());
         pokemon.setLevel(pokemonDTO.getLevel());
+        pokemon.setMoves(pokemonDTO.getMoves());
 
         em.persist(pokemon);
 		em.getTransaction().commit();

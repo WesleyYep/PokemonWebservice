@@ -1,6 +1,11 @@
 package nz.ac.auckland.pokemon.domain;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Enumerated;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Bean class to represent a Pokemon move.
@@ -13,13 +18,31 @@ import javax.persistence.Embeddable;
  */
 
 @Embeddable
+@XmlRootElement(name="move")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Move {
-	private String name;
-	private int power;
-	private int accuracy;
-	private Type type;
+
+    @XmlElement(name="name")
+    private String name;
+
+    @XmlElement(name="power")
+    private int power;
+
+    @XmlElement(name="accuracy")
+    private int accuracy;
+
+    @XmlElement(name="type")
+    @Enumerated
+    private Type type;
 	
 	public Move() {}
+
+	public Move(String name, int power, int accuracy, Type type) {
+		this.name = name;
+		this.power = power;
+		this.accuracy = accuracy;
+		this.type = type;
+	}
 	
 	public String getName() {
 		return name;

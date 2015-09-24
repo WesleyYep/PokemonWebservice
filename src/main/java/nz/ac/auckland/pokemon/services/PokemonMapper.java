@@ -20,7 +20,8 @@ public class PokemonMapper {
 				pokemonDTO.getName(),
 				pokemonDTO.getNickname(),
 				pokemonDTO.getGender(),
-				pokemonDTO.getLevel());
+				pokemonDTO.getLevel(),
+                pokemonDTO.getMoves());
 		return pokemon;
 	}
 	
@@ -31,7 +32,8 @@ public class PokemonMapper {
 						pokemon.getName(),
 						pokemon.getNickname(),
 						pokemon.getGender(),
-						pokemon.getLevel());
+						pokemon.getLevel(),
+						pokemon.getMoves());
 		return pokemonDTO;
 		
 	}

@@ -1,7 +1,9 @@
 package nz.ac.auckland.pokemon.test;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.Move;
 import nz.ac.auckland.pokemon.domain.Pokemon;
+import nz.ac.auckland.pokemon.domain.Type;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.services.PokemonMapper;
 import org.junit.Test;
@@ -12,6 +14,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.fail;
 
@@ -41,8 +46,9 @@ public class ZPokemonResourceTest
         Client client = ClientBuilder.newClient();
         try {
             _logger.info("Creating a new Pokemon ...");
-
-            PokemonDTO pikachu = new PokemonDTO("pikachu", "pika", Gender.MALE, 5);
+            Set<Move> moves = new HashSet<Move>();
+            moves.add(new Move("tackle", 40, 100, Type.NORMAL));
+            PokemonDTO pikachu = new PokemonDTO("pikachu", "pika", Gender.MALE, 5, moves);
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/pokemon")
@@ -77,8 +83,9 @@ public class ZPokemonResourceTest
             // Send a HTTP PUT request to the Web service. The request URI is
             // that retrieved from the Web service (the response to the GET message)
             // and the message body is the above XML.
+            //This PUT REQUEST should be called when a pokemon is caught by a trainer
             location += "/" + TestConstants.trainerId;
-            _logger.info("URI for sending caught PUT request: " + location);
+            _logger.info("URI for sending caught PUT request: " + location); //the location should be ..../pokemon_id/trainer_id
 
             response = client.target(location).request().put(null);
             status = response.getStatus();
@@ -86,21 +93,8 @@ public class ZPokemonResourceTest
                 _logger.error("Failed to catch Pokemon; Web service responded with: " + status);
                 fail();
             }
-//
-//            // Extract location header from the HTTP response message. This should
-//            // give the URI for the newly created Trainer.
-//            location = response.getLocation().toString();
-//            _logger.info("URI for updated Trainer: " + location);
-//            array = location.split("/");
-//            id = Integer.parseInt(array[array.length-1]);
-//            _logger.info("ID for updated Trainer: " + id);
-//            response.close();
-//
-//            // Query the Web service for the new Trainer. Send a HTTP GET request.
-//            _logger.info("Querying the updated Trainer ...");
-//            pokemonDTO = client.target(location).request().get(TrainerDTO.class);
-//            // Trainer pokemon = TrainerMapper.toDomainModel(pokemonDTO);
-//            _logger.info("Retrieved Trainer:\n" + pokemonDTO.toString());
+
+            response.close();
 
         } finally {
             // Release any connection resources.

@@ -4,6 +4,8 @@ import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Bean class to represent a Pokemon.
@@ -36,12 +38,17 @@ public class Pokemon {
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 
-	public Pokemon(long id, String lastName, String firstName, Gender gender, int level) {
+	@ElementCollection
+	@CollectionTable(name = "MOVES")
+    protected Set<Move> moves = new HashSet<Move>();
+
+	public Pokemon(long id, String lastName, String firstName, Gender gender, int level, Set<Move> moves) {
 		this.id = id;
 		this.name = lastName;
 		this.nickname = firstName;
 		this.gender = gender;
 		this.level = level;
+        this.moves = moves;
 //		_associates = new HashSet<Parolee>();
 	}
 
@@ -92,5 +99,21 @@ public class Pokemon {
 	public void setTrainer(Trainer trainer) {
 		this.trainer = trainer;
 	}
+
+    public void learnMove(Move move) {
+        moves.add(move);
+    }
+
+    public void forgetMove(Move move) {
+        moves.remove(move);
+    }
+
+    public Set<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(Set<Move> moves) {
+        this.moves = moves;
+    }
 
 }
