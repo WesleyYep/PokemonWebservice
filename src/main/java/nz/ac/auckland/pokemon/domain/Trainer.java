@@ -107,10 +107,6 @@ public class Trainer {
 		contacts.add(t);
 	}
 
-	public void addToRecord(Battle b) {
-		record.addBattle(b);
-	}
-
 	public Record getRecord() {
 		return record;
 	}
@@ -118,5 +114,20 @@ public class Trainer {
 	public void setRecord(Record record) {
 		this.record = record;
 	}
+	
+	public void wonBattle() {
+		record.setBattlesWon(record.getBattlesWon()+1);
+	}
+	
+	public void lostBattle() {
+		record.setBattlesLost(record.getBattlesLost()+1);
+	}
+	
+	public void wonBadge() {
+		record.setBadgesWon(record.getBadgesWon()+1);
+	}
 
+	public void wonCompetition() {
+		record.setCompetitionWins(record.getCompetitionWins()+1);
+	}
 }

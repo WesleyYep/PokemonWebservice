@@ -10,12 +10,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.domain.Gender;
 
@@ -48,6 +52,7 @@ public class TrainerResource {
 		Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
 	//	trainer.setId(_idCounter.incrementAndGet());
 	//	trainerDB.put(trainer.getId(), trainer);
+		trainer.setRecord(new Record());
 		em.persist(trainer);
 		em.getTransaction().commit();
 

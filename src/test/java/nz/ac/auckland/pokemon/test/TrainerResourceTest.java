@@ -8,7 +8,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
+
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ public class TrainerResourceTest
         try {
             _logger.info("Creating a new Trainer ...");
 
-            TrainerDTO ash = new TrainerDTO("ketchum", "ash", Gender.MALE, new LocalDate(1958, 5, 17));
+            TrainerDTO ash = new TrainerDTO("ketchum", "ash", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/trainers")
@@ -74,7 +76,7 @@ public class TrainerResourceTest
             _logger.info("Retrieved Trainer:\n" + trainerDTO.toString());
 
 
-            TrainerDTO updateTrainer = new TrainerDTO(ash.getLastName(), "newAsh", Gender.MALE, new LocalDate(1960, 5, 17));
+            TrainerDTO updateTrainer = new TrainerDTO(ash.getLastName(), "newAsh", Gender.MALE, new LocalDate(1960, 5, 17), new Record());
 
             // Send a HTTP PUT request to the Web service. The request URI is
             // that retrieved from the Web service (the response to the GET message)
@@ -90,7 +92,7 @@ public class TrainerResourceTest
 
 
             //now add a new trainer and test adding a contact
-            TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12));
+            TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12), new Record());
             response = client.target("http://localhost:10000/services/trainers")
                     .request().post(Entity.xml(brock));
             status = response.getStatus();

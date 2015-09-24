@@ -1,8 +1,10 @@
 package nz.ac.auckland.pokemon.test;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -42,8 +44,8 @@ public class BattleResourceTest
         // connections to the Web service.
         Client client = ClientBuilder.newClient();
         try {
-            TrainerDTO bob = new TrainerDTO("smith", "bob", Gender.MALE, new LocalDate(1958, 5, 17));
-            TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12));
+            TrainerDTO bob = new TrainerDTO("smith", "bob", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
+            TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12), new Record());
 
             BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 22, 12),
                     bob, john, 19);
@@ -52,7 +54,7 @@ public class BattleResourceTest
             int status = response.getStatus();
 
             if (status != 201) {
-                _logger.error("Failed to create Trainer; Web service responded with: " + status);
+                _logger.error("Failed to create Battle; Web service responded with: " + status);
                 fail();
             }
 

@@ -19,7 +19,8 @@ public class TrainerMapper {
 				dtoTrainer.getLastName(),
 				dtoTrainer.getFirstName(),
 				dtoTrainer.getGender(),
-				dtoTrainer.getDateOfBirth().toDateTimeAtStartOfDay().toDate(), new Record());
+				dtoTrainer.getDateOfBirth().toDateTimeAtStartOfDay().toDate(),
+				dtoTrainer.getRecord());
 		return trainer;
 	}
 	
@@ -30,7 +31,8 @@ public class TrainerMapper {
 						trainer.getLastName(),
 						trainer.getFirstName(),
 						trainer.getGender(),
-						new LocalDate(trainer.getDateOfBirth()));
+						new LocalDate(trainer.getDateOfBirth()),
+						trainer.getRecord());
 		return trainerDTO;
 		
 	}

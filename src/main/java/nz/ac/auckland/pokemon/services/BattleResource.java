@@ -39,18 +39,18 @@ public class BattleResource {
 		em.getTransaction().begin();
 
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
-		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
-		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
-		if (t1.getRecord() == null) {
-			t1.setRecord(new Record());
-		}
-		if (t2.getRecord() == null) {
-			t2.setRecord(new Record());
-		}
-		t1.addToRecord(battle);
-		t2.addToRecord(battle);
-		em.persist(t1);
-		em.persist(t2);
+//		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
+//		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
+//		if (t1.getRecord() == null) {
+//			t1.setRecord(new Record());
+//		}
+//		if (t2.getRecord() == null) {
+//			t2.setRecord(new Record());
+//		}
+//		t1.addToRecord(battle);
+//		t2.addToRecord(battle);
+//		em.persist(t1);
+//		em.persist(t2);
 		em.persist(battle);
 		em.getTransaction().commit();
 

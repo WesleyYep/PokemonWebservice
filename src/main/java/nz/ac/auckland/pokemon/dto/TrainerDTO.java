@@ -1,9 +1,12 @@
 package nz.ac.auckland.pokemon.dto;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.Record;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
+
 import nz.ac.auckland.pokemon.jaxb.LocalDateAdapter;
 
 import javax.persistence.Enumerated;
@@ -36,6 +39,9 @@ public class TrainerDTO {
 	@XmlElement(name="date-of-birth")
 	@XmlJavaTypeAdapter(value=LocalDateAdapter.class)
 	private LocalDate dateOfBirth;
+	
+	@XmlElement(name="record")
+	private Record record;
 
 	protected TrainerDTO() {
 
@@ -50,8 +56,8 @@ public class TrainerDTO {
 	 * which is optional (not all Trainers are subject to a curfew).
      *
 	 */
-	public TrainerDTO(String lastName, String firstName, Gender gender, LocalDate dateOfBirth) throws IllegalArgumentException {
-		this(0, lastName, firstName, gender, dateOfBirth);
+	public TrainerDTO(String lastName, String firstName, Gender gender, LocalDate dateOfBirth, Record record) throws IllegalArgumentException {
+		this(0, lastName, firstName, gender, dateOfBirth, record);
 	}
 
 	/**
@@ -60,12 +66,13 @@ public class TrainerDTO {
 	 * implementation when creating a DTO Parolee from a domain-model Parolee
 	 * object.
 	 */
-	public TrainerDTO(long id, String lastName, String firstName, Gender gender, LocalDate dateOfBirth) {
+	public TrainerDTO(long id, String lastName, String firstName, Gender gender, LocalDate dateOfBirth, Record record) {
 		this.id = id;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
+		this.record = record;
 	}
 
 	public long getId() {
@@ -102,6 +109,14 @@ public class TrainerDTO {
 
 	public void setDateOfBirth(LocalDate date) {
 		this.dateOfBirth = date;
+	}
+	
+	public Record getRecord() {
+		return record;
+	}
+	
+	public void setRecord(Record record) {
+		this.record = record;
 	}
 	
 
