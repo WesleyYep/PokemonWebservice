@@ -20,9 +20,9 @@ import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.domain.Gender;
 
 /**
- * Implementation of the TrainerResource interface.
+ * Webservice methods for /trainers
  *
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 @Path("/trainers")
@@ -40,11 +40,11 @@ public class TrainerResource {
 	//private AtomicInteger _idCounter = new AtomicInteger();
 
 	/**
-	 * Adds a new Parolee to the system. The state of the new Parolee is
-	 * described by a nz.ac.auckland.parolee.dto.Parolee object.
+	 * Adds a new Trainer to the system. The state of the new Trainer is
+	 * described by a nz.ac.auckland.pokemon.dto.Trainer object.
 	 *
 	 * @param trainerDTO
-	 *            the Parolee data included in the HTTP request body.
+	 *            the Trainer data included in the HTTP request body.
 	 */
 	@POST
 	@Consumes("application/xml")

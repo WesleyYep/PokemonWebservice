@@ -6,12 +6,12 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Bean class to represent a Trainer.
+ * Bean class to represent a Pokemon.
  *
- * For this first Web service, a Trainer is simply represented by a unique id,
- * a name, gender and date of birth.
+ * For this first Web service, a Pokemon is simply represented by a unique id,
+ * a name, nickname, gender and level.
  *
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 
