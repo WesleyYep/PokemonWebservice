@@ -39,11 +39,11 @@ public class BattleResource {
 		em.getTransaction().begin();
 
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
-//		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
+		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
 //		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
-//		if (t1.getRecord() == null) {
-//			t1.setRecord(new Record());
-//		}
+		if (t1.getRecord() == null) {
+			t1.setRecord(new Record());
+		}
 //		if (t2.getRecord() == null) {
 //			t2.setRecord(new Record());
 //		}

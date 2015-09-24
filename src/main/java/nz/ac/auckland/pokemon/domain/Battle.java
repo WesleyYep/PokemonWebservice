@@ -37,6 +37,9 @@ public class Battle {
     protected Trainer secondTrainer;
 
     private long winnerId;
+    
+    @ManyToMany(mappedBy = "battles")
+    private Set<Record> records = new HashSet<Record>( );
 
     public Battle() {
 

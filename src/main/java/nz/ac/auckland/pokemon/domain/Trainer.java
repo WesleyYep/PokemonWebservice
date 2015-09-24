@@ -39,7 +39,10 @@ public class Trainer {
 	)
 	private Set<Trainer> contacts = new HashSet<Trainer>();
 
-	@Embedded
+	@OneToOne(
+			 optional = false,
+			 cascade = CascadeType.PERSIST )
+			 @JoinColumn( unique=true )
 	private Record record;
 
 	public Trainer() {
@@ -115,19 +118,8 @@ public class Trainer {
 		this.record = record;
 	}
 	
-	public void wonBattle() {
-		record.setBattlesWon(record.getBattlesWon()+1);
+	public void addToRecord(Battle b) {
+		record.getBattles().add(b);
 	}
 	
-	public void lostBattle() {
-		record.setBattlesLost(record.getBattlesLost()+1);
-	}
-	
-	public void wonBadge() {
-		record.setBadgesWon(record.getBadgesWon()+1);
-	}
-
-	public void wonCompetition() {
-		record.setCompetitionWins(record.getCompetitionWins()+1);
-	}
 }

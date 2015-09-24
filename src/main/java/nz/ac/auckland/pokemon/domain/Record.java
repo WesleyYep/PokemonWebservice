@@ -19,22 +19,35 @@ import java.util.Set;
  *
  */
 
-@Embeddable
-@XmlRootElement(name="record")
-@XmlAccessorType(XmlAccessType.FIELD)
+//@Embeddable
+//@XmlRootElement(name="record")
+//@XmlAccessorType(XmlAccessType.FIELD)
+@Entity
 public class Record {
 	
-	@XmlAttribute(name="battlesWon")
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	
+//	@XmlElement(name="battlesWon")
 	private int battlesWon;
 	
-	@XmlAttribute(name="battlesLost")
+//	@XmlElement(name="battlesLost")
 	private int battlesLost;
 	
-	@XmlAttribute(name="badgesWon")
+//	@XmlElement(name="badgesWon")
 	private int badgesWon;
 	
-	@XmlAttribute(name="competitionWins")
+//	@XmlElement(name="competitionWins")
 	private int competitionWins;
+	
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	 @JoinTable(
+	 name = "RECORD_BATTLES",
+	 joinColumns = @JoinColumn(name = "RECORD_ID"),
+	 inverseJoinColumns = @JoinColumn(name = "BATTLE_ID")
+	 )
+	private Set<Battle> battles = new HashSet<Battle>();
 
 	public Record() {
 		badgesWon = 0;
@@ -80,6 +93,14 @@ public class Record {
 
 	public void setCompetitionWins(int competitionWins) {
 		this.competitionWins = competitionWins;
+	}
+	
+	public Set<Battle> getBattles() {
+		return battles;
+	}
+	
+	public void setBattles(Set<Battle> battles) {
+		this.battles = battles;
 	}
 
 }
