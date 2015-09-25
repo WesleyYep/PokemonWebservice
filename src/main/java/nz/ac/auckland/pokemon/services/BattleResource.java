@@ -20,6 +20,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Response;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -39,7 +40,7 @@ public class BattleResource {
 	private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 			.createEntityManager();
 	private Executor executor = Executors.newSingleThreadExecutor();
-	Queue<AsyncResponse> responses = new PriorityQueue<AsyncResponse>();
+	List<AsyncResponse> responses = new ArrayList<AsyncResponse>();
 
 	/**
 	 * For now, create a battle by passing in a single BattleDBO
@@ -54,12 +55,8 @@ public class BattleResource {
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
 		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
 		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
-		if (t1.getRecord() == null) {
-			t1.setRecord(new Record());
-		}
-		if (t2.getRecord() == null) {
-			t2.setRecord(new Record());
-		}
+		t1.setRecord(new Record());
+		t2.setRecord(new Record());
 		t1.addToRecord(battle);
 		t2.addToRecord(battle);
 
@@ -67,29 +64,30 @@ public class BattleResource {
 		em.getTransaction().commit();
 
 		_logger.debug("Created battle: " + battle);
-		return Response.created(URI.create("/battle/" + battle.getId()))
+		return Response.created(URI.create("/battles/" + battle.getId()))
 				.build();
 	}
 	
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "battles/{id}.
-	 * @param id the unique id of the Trainer to retrieve.
-	 * @return a StreamingOutput object storing a representation of the required
-	 *         Trainer in XML format.
 	 */
 	@GET
-	@PathParam("/challenge")
+	@Path("/challenge")
 	@Produces("application/xml")
 	public synchronized void registerForBattle(@Suspended AsyncResponse response) {
+		_logger.info("adding async to list");
 		responses.add(response); //register as looking for a battle
 	}
 
 	@POST
-	@PathParam("/challenge")
+	@Path("/challenge")
 	@Consumes("application/xml")
 	public synchronized void acceptBattle(TrainerDTO trainer) {
+
 		if (responses.size() > 0) {
-			responses.poll().resume(trainer); //tell the the first trainer that this trainer is accepting their battle request
+			_logger.info("popping from list");
+
+			responses.remove(responses.size()-1).resume(trainer); //tell the the first trainer that this trainer is accepting their battle request
 		}
 	}
 
@@ -128,18 +126,19 @@ public class BattleResource {
 	public Response updateBattle(@PathParam("id") long id, BattleDTO battleDTO) {
 		em.getTransaction().begin();
 		Battle battle = em.find(Battle.class, id);
+		_logger.info("Retrieved sent Battle:\n" + battleDTO.toString());
 
-		// Update the details of the Pokemon to be updated.
-		battle.setStartTime(battleDTO.getStartTime().toDate());
+		// Update the details of the Battle to be updated.
+	//	battle.setStartTime(battleDTO.getStartTime().toDate());
 		battle.setEndTime(battleDTO.getEndTime().toDate());
-		battle.setFirstTrainer(TrainerMapper.toDomainModel(battleDTO.getFirstTrainer()));
-		battle.setSecondTrainer(TrainerMapper.toDomainModel(battleDTO.getSecondTrainer()));
+	//	battle.setFirstTrainer(TrainerMapper.toDomainModel(battleDTO.getFirstTrainer()));
+	//	battle.setSecondTrainer(TrainerMapper.toDomainModel(battleDTO.getSecondTrainer()));
 		battle.setWinnerId(battleDTO.getWinnerId());
 
 		em.persist(battle);
 		em.getTransaction().commit();
 		_logger.debug("Updated battle: " + battle);
-		return Response.created(URI.create("/battle/" + battle.getId()))
+		return Response.created(URI.create("/battles/" + battle.getId()))
 				.build();
 	}
 

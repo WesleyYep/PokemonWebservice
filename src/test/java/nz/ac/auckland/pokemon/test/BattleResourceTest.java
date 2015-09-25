@@ -1,11 +1,13 @@
 package nz.ac.auckland.pokemon.test;
 
+import nz.ac.auckland.pokemon.domain.Battle;
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
+import nz.ac.auckland.pokemon.services.BattleMapper;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -13,10 +15,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.fail;
@@ -44,90 +43,100 @@ public class BattleResourceTest
     {
         // Use ClientBuilder to create a new client that can be used to create
         // connections to the Web service.
-        Client client = ClientBuilder.newClient();
+        final Client client = ClientBuilder.newClient();
+        final Client client2 = ClientBuilder.newClient();
+        _logger.info("starting battles tests");
+
         try {
-            TrainerDTO bob = new TrainerDTO("smith", "bob", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
-            TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12), new Record());
-
-            BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 22, 12),
-                    bob, john, 19, new GeoPosition(120.0, 40.20));
-            Response response = client.target("http://localhost:10000/services/battles")
-                    .request().post(Entity.xml(defaultBattle));
-            int status = response.getStatus();
-
-            if (status != 201) {
-                _logger.error("Failed to create Battle; Web service responded with: " + status);
-                fail();
-            }
-            
-            //now get clients to send battle request and accept request asynchronously
+            //now get one client to send battle request and accept request asynchronously
             final WebTarget target = client.target("http://localhost:10000/services/battles/challenge");
     		target.request()
     				 .async()
-            		 .get(new InvocationCallback<TrainerDTO> {
-            		 public void completed( String quote ) {
-            		 System.out.println( "RedHat: " + value );
-            		 target.request( ).async( ).get( this );
-            		 }
-            		 public void failed( Throwable t ) { }
-            		 }
+            		 .get(new InvocationCallback<TrainerDTO>() {
+                         public void completed( TrainerDTO opponent ) {
+                             _logger.info("callback was called!");
+                            createBattle(opponent); //create the battle once the callback is called
+                         }
+                         public void failed( Throwable t) {
+                             _logger.error("Failed to call second response");
+                         }
+                     });
 
-//            // Extract location header from the HTTP response message. This should
-//            // give the URI for the newly created Trainer.
-//            String location = response.getLocation().toString();
-//            _logger.info("URI for new Trainer: " + location);
-//            String[] array = location.split("/");
-//            int id = Integer.parseInt(array[array.length-1]);
-//            _logger.info("ID for new Trainer: " + id);
-//
-//            // Close the connection to the Web service.
-//            response.close();
-//
-//            TestConstants.trainerId = id;
-//            // Query the Web service for the new Trainer. Send a HTTP GET request.
-//            _logger.info("Querying the Trainer ...");
-//            TrainerDTO trainerDTO = client.target(location).request().get(TrainerDTO.class);
-//            // Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
-//            _logger.info("Retrieved Trainer:\n" + trainerDTO.toString());
-//
-//
-//            TrainerDTO updateTrainer = new TrainerDTO(ash.getLastName(), "newAsh", Gender.MALE, new LocalDate(1960, 5, 17));
-//
-//            // Send a HTTP PUT request to the Web service. The request URI is
-//            // that retrieved from the Web service (the response to the GET message)
-//            // and the message body is the above XML.
-//            response = client.target(location).request().put(Entity.xml(updateTrainer));
-//            status = response.getStatus();
-//            if (status != 201) {
-//                _logger.error("Failed to update Trainer; Web service responded with: " + status);
-//                fail();
-//            }
-//
-//            response.close();
-//
-//
-//            //now add a new trainer and test adding a contact
-//            TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12));
-//            response = client.target("http://localhost:10000/services/trainers")
-//                    .request().post(Entity.xml(brock));
-//            status = response.getStatus();
-//            if (status != 201) {
-//                _logger.error("Failed to create Trainer; Web service responded with: " + status);
-//                fail();
-//            }
-//            location = response.getLocation().toString() + "/" + TestConstants.trainerId;
-//            _logger.debug("Trying to update contact at location: " + location);
-//            response.close();
-//            response = client.target(location).request().put(null);
-//            status = response.getStatus();
-//            if (status != 201) {
-//                _logger.error("Failed to add contact; Web service responded with: " + status);
-//                fail();
-//            }
+            _logger.info("sending post to battle accept");
+
+            //new trainer will send a post request to accept the battle request from the first trainer
+            //this should actually occur before the previous callback
+            TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12) , new Record());
+            Response response = client2.target("http://localhost:10000/services/battles/challenge")
+                    .request().post(Entity.xml(john));
+            int status = response.getStatus();
+
+            if (status >= 400) {
+                _logger.error("Failed to accept Battle; Web service responded with: " + status);
+                fail();
+            }
+
+
 
         } finally {
             client.close();
+            client2.close();
         }
+    }
+
+    private void createBattle(TrainerDTO opponent) {
+        Client client = ClientBuilder.newClient();
+        TrainerDTO bob = new TrainerDTO("smith", "bob", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
+
+        BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 21, 57),
+                bob, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
+        Response response = client.target("http://localhost:10000/services/battles")
+                .request().post(Entity.xml(defaultBattle));
+        int status = response.getStatus();
+        _logger.info("Location: " + response.getLocation().toString());
+        if (status != 201) {
+            _logger.error("Failed to create Battle; Web service responded with: " + status);
+            fail();
+        }
+        client.close();
+        //finish carrying out the tests now
+        getBattleAndUpdate(response);
+    }
+
+    private void getBattleAndUpdate(Response response) {
+        Client client = ClientBuilder.newClient();
+
+        // Extract location header from the HTTP response message. This should
+        // give the URI for the newly created Trainer.
+        String location = response.getLocation().toString();
+        _logger.info("URI for new Battle: " + location);
+        String[] array = location.split("/");
+        int id = Integer.parseInt(array[array.length-1]);
+        _logger.info("ID for new Battle: " + id);
+
+        // Close the connection to the Web service.
+        response.close();
+
+        // Query the Web service for the new Trainer. Send a HTTP GET request.
+        _logger.info("Querying the Battle ...");
+        BattleDTO battleDTO = client.target(location).request().get(BattleDTO.class);
+        _logger.info("Retrieved Battle:\n" + battleDTO.toString());
+
+        BattleDTO updateBattle = new BattleDTO(battleDTO.getStartTime(), new DateTime(2015, 9, 24, 22, 10), battleDTO.getFirstTrainer(),
+                battleDTO.getSecondTrainer(), battleDTO.getFirstTrainer().getId(), battleDTO.getLocation());
+
+        // Send a HTTP PUT request to the Web service. The request URI is
+        // that retrieved from the Web service (the response to the GET message)
+        // and the message body is the above XML.
+        Response newResponse = client.target(location).request().put(Entity.xml(updateBattle));
+        int status = newResponse.getStatus();
+        if (status != 201) {
+            _logger.error("Failed to update Battle; Web service responded with: " + status);
+            fail();
+        }
+
+        newResponse.close();
+        client.close();
     }
 }
 

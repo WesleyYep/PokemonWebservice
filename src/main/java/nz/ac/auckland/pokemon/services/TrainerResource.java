@@ -50,8 +50,6 @@ public class TrainerResource {
 		em.getTransaction().begin();
 
 		Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
-	//	trainer.setId(_idCounter.incrementAndGet());
-	//	trainerDB.put(trainer.getId(), trainer);
 		trainer.setRecord(new Record());
 		em.persist(trainer);
 		em.getTransaction().commit();
