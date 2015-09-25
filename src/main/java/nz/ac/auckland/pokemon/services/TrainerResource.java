@@ -5,14 +5,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resources;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
+import nz.ac.auckland.pokemon.dto.TrainerListDTO;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -83,6 +91,38 @@ public class TrainerResource {
 		return trainerDTO;
 	}
 
+	@GET
+	@Produces("application/xml")
+	public TrainerListDTO findAll(@QueryParam("start") int start, @QueryParam("size") int size) {
+		List<Trainer> trainers = em.createQuery("SELECT t FROM Trainer t").getResultList();
+		List<TrainerDTO> trainerDTOs = new ArrayList<TrainerDTO>();
+
+		for (int i = start; i < start + size; i++) {
+			trainerDTOs.add(TrainerMapper.toDto(trainers.get(i)));
+		}
+
+		List<Link> links = new ArrayList<Link>();
+		TrainerListDTO trainersDTO = new TrainerListDTO();
+		URI nextUri, previousUri;
+		if (start + size < trainers.size()) {
+			nextUri = URI.create("http://localhost:10000/services/trainers?start=" + (start+size) + "&size=" + size);
+		} else {
+			nextUri = URI.create("");
+		}
+		if (start - size >= 0) {
+			previousUri = URI.create("http://localhost:10000/services/trainers?start=" + (start-size) + "&size=" + size);
+		} else {
+			previousUri = URI.create("");
+		}
+		_logger.info("next uri generated is: " + nextUri);
+		_logger.info("previous uri generated is: " + previousUri);
+		links.add(Link.fromUri(nextUri).rel("next").type(MediaType.APPLICATION_XML).build());
+		links.add(Link.fromUri(previousUri).rel("previous").type(MediaType.APPLICATION_XML).build());
+
+		trainersDTO.setLinks(links);
+		trainersDTO.setTrainers(trainerDTOs);
+		return trainersDTO;
+	}
 
 
 	/**

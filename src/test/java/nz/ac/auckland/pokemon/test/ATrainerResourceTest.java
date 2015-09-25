@@ -11,6 +11,7 @@ import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
+import nz.ac.auckland.pokemon.dto.TrainerListDTO;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -108,6 +109,18 @@ public class ATrainerResourceTest
                 _logger.error("Failed to add contact; Web service responded with: " + status);
                 fail();
             }
+            response.close();
+
+            //now get a list of HATEOAS trainers
+            _logger.info("Querying the Trainer list ...");
+            TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers")
+                    .queryParam("start", 0)
+                    .queryParam("size", 3)
+                    .request()
+                    .get(TrainerListDTO.class);
+            _logger.info("Retrieved trainer list - next: " + trainerListDTO.getNext());
+            _logger.info("Retrieved trainer list - previous: " + trainerListDTO.getPrevious());
+            _logger.info("Retrieved trainer list - size: " + trainerListDTO.getTrainers().size());
 
         } finally {
             client.close();
