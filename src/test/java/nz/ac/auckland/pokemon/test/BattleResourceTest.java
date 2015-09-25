@@ -1,6 +1,7 @@
 package nz.ac.auckland.pokemon.test;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.fail;
@@ -48,7 +50,7 @@ public class BattleResourceTest
             TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12), new Record());
 
             BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 22, 12),
-                    bob, john, 19);
+                    bob, john, 19, new GeoPosition(120.0, 40.20));
             Response response = client.target("http://localhost:10000/services/battles")
                     .request().post(Entity.xml(defaultBattle));
             int status = response.getStatus();
@@ -57,6 +59,18 @@ public class BattleResourceTest
                 _logger.error("Failed to create Battle; Web service responded with: " + status);
                 fail();
             }
+            
+            //now get clients to send battle request and accept request asynchronously
+            final WebTarget target = client.target("http://localhost:10000/services/battles/challenge");
+    		target.request()
+    				 .async()
+            		 .get(new InvocationCallback<TrainerDTO> {
+            		 public void completed( String quote ) {
+            		 System.out.println( "RedHat: " + value );
+            		 target.request( ).async( ).get( this );
+            		 }
+            		 public void failed( Throwable t ) { }
+            		 }
 
 //            // Extract location header from the HTTP response message. This should
 //            // give the URI for the newly created Trainer.

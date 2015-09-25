@@ -21,7 +21,8 @@ public class BattleMapper {
 				battleDTO.getEndTime().toDate(),
 				TrainerMapper.toDomainModel(battleDTO.getFirstTrainer()),
 				TrainerMapper.toDomainModel(battleDTO.getSecondTrainer()),
-                battleDTO.getWinnerId());
+                battleDTO.getWinnerId(),
+                battleDTO.getLocation());
 		return battle;
 	}
 	
@@ -33,7 +34,8 @@ public class BattleMapper {
 						new DateTime(battle.getEndTime()),
 						TrainerMapper.toDto(battle.getFirstTrainer()),
 						TrainerMapper.toDto(battle.getSecondTrainer()),
-						battle.getWinnerId());
+						battle.getWinnerId(),
+						battle.getLocation());
 		return battleDTO;
 		
 	}

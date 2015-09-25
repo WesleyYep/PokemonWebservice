@@ -40,18 +40,22 @@ public class Battle {
     
     @ManyToMany(mappedBy = "battles")
     private Set<Record> records = new HashSet<Record>( );
+    
+    @Embedded
+    private GeoPosition location;
 
     public Battle() {
 
     }
 
-    public Battle(long id, Date startTime, Date endTime, Trainer firstTrainer, Trainer secondTrainer, long winnerId) {
+    public Battle(long id, Date startTime, Date endTime, Trainer firstTrainer, Trainer secondTrainer, long winnerId, GeoPosition location) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.firstTrainer = firstTrainer;
         this.secondTrainer = secondTrainer;
         this.winnerId = winnerId;
+        this.location = location;
     }
 
     public long getId() {
@@ -101,6 +105,14 @@ public class Battle {
 
     public void setWinnerId(long winnerId) {
         this.winnerId = winnerId;
+    }
+    
+    public GeoPosition getLocation() {
+    	return location;
+    }
+    
+    public void setLocation(GeoPosition location) {
+    	this.location = location;
     }
 
 }

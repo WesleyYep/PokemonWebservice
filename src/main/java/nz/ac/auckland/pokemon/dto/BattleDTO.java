@@ -1,10 +1,12 @@
 package nz.ac.auckland.pokemon.dto;
 
 import nz.ac.auckland.pokemon.domain.Gender;
+import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Move;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.jaxb.DateTimeAdapter;
 import nz.ac.auckland.pokemon.jaxb.LocalDateAdapter;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
@@ -13,6 +15,7 @@ import org.joda.time.LocalTime;
 import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -43,8 +46,11 @@ public class BattleDTO {
 	@XmlElement(name="secondTrainer")
 	private TrainerDTO secondTrainer;
 
-	@XmlAttribute(name="winnerId")
+	@XmlElement(name="winnerId")
 	private long winnerId;
+	
+	@XmlElement(name="location")
+	private GeoPosition location;
 
 	protected BattleDTO() {
 
@@ -59,8 +65,9 @@ public class BattleDTO {
 	 * which is optional (not all Trainers are subject to a curfew).
 	 *
 	 */
-	public BattleDTO(DateTime startTime, DateTime endTime, TrainerDTO firstTrainer, TrainerDTO secondTrainer, long winnerId) throws IllegalArgumentException {
-		this(0, startTime, endTime, firstTrainer, secondTrainer, winnerId);
+	public BattleDTO(DateTime startTime, DateTime endTime, TrainerDTO firstTrainer, TrainerDTO secondTrainer,
+			long winnerId, GeoPosition location) throws IllegalArgumentException {
+		this(0, startTime, endTime, firstTrainer, secondTrainer, winnerId, location);
 	}
 
 	/**
@@ -69,13 +76,15 @@ public class BattleDTO {
 	 * implementation when creating a DTO Parolee from a domain-model Parolee
 	 * object.
 	 */
-	public BattleDTO(long id, DateTime startTime, DateTime endTime, TrainerDTO firstTrainer, TrainerDTO secondTrainer, long winnerId) {
+	public BattleDTO(long id, DateTime startTime, DateTime endTime, TrainerDTO firstTrainer, TrainerDTO secondTrainer, 
+			long winnerId, GeoPosition location) {
 		this.id = id;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.firstTrainer = firstTrainer;
 		this.secondTrainer = secondTrainer;
 		this.winnerId = winnerId;
+		this.location = location;
 	}
 
 	public long getId() {
@@ -127,6 +136,14 @@ public class BattleDTO {
 		this.winnerId = winnerId;
 	}
 
+    public GeoPosition getLocation() {
+    	return location;
+    }
+    
+    public void setLocation(GeoPosition location) {
+    	this.location = location;
+    }
+	
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();

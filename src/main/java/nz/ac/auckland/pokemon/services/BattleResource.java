@@ -1,19 +1,30 @@
 package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Battle;
+import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
+import nz.ac.auckland.pokemon.dto.TrainerDTO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Response;
+
 import java.net.URI;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Webservice methods related to Pokemon battles between trainers
@@ -27,6 +38,8 @@ public class BattleResource {
 	private static Logger _logger = LoggerFactory.getLogger(BattleResource.class);
 	private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 			.createEntityManager();
+	private Executor executor = Executors.newSingleThreadExecutor();
+	Queue<AsyncResponse> responses = new PriorityQueue<AsyncResponse>();
 
 	/**
 	 * For now, create a battle by passing in a single BattleDBO
@@ -40,17 +53,16 @@ public class BattleResource {
 
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
 		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
-//		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
+		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
 		if (t1.getRecord() == null) {
 			t1.setRecord(new Record());
 		}
-//		if (t2.getRecord() == null) {
-//			t2.setRecord(new Record());
-//		}
-//		t1.addToRecord(battle);
-//		t2.addToRecord(battle);
-//		em.persist(t1);
-//		em.persist(t2);
+		if (t2.getRecord() == null) {
+			t2.setRecord(new Record());
+		}
+		t1.addToRecord(battle);
+		t2.addToRecord(battle);
+
 		em.persist(battle);
 		em.getTransaction().commit();
 
@@ -58,7 +70,31 @@ public class BattleResource {
 		return Response.created(URI.create("/battle/" + battle.getId()))
 				.build();
 	}
+	
+	/**
+	 * Handles incoming HTTP GET requests for the relative URI "battles/{id}.
+	 * @param id the unique id of the Trainer to retrieve.
+	 * @return a StreamingOutput object storing a representation of the required
+	 *         Trainer in XML format.
+	 */
+	@GET
+	@PathParam("/challenge")
+	@Produces("application/xml")
+	public synchronized void registerForBattle(@Suspended AsyncResponse response) {
+		responses.add(response); //register as looking for a battle
+	}
 
+	@POST
+	@PathParam("/challenge")
+	@Consumes("application/xml")
+	public synchronized void acceptBattle(TrainerDTO trainer) {
+		if (responses.size() > 0) {
+			responses.poll().resume(trainer); //tell the the first trainer that this trainer is accepting their battle request
+		}
+	}
+
+	
+	
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "battles/{id}.
 	 * @param id the unique id of the Trainer to retrieve.
