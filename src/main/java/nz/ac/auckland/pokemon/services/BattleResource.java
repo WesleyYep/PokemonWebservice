@@ -53,13 +53,6 @@ public class BattleResource {
 		em.getTransaction().begin();
 
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
-		Trainer t1 = TrainerMapper.toDomainModel(battleDTO.getFirstTrainer());
-		Trainer t2 = TrainerMapper.toDomainModel(battleDTO.getSecondTrainer());
-		t1.setRecord(new Record());
-		t2.setRecord(new Record());
-		t1.addToRecord(battle);
-		t2.addToRecord(battle);
-
 		em.persist(battle);
 		em.getTransaction().commit();
 
@@ -86,7 +79,6 @@ public class BattleResource {
 
 		if (responses.size() > 0) {
 			_logger.info("popping from list");
-
 			responses.remove(responses.size()-1).resume(trainer); //tell the the first trainer that this trainer is accepting their battle request
 		}
 	}
@@ -129,11 +121,17 @@ public class BattleResource {
 		_logger.info("Retrieved sent Battle:\n" + battleDTO.toString());
 
 		// Update the details of the Battle to be updated.
-	//	battle.setStartTime(battleDTO.getStartTime().toDate());
 		battle.setEndTime(battleDTO.getEndTime().toDate());
-	//	battle.setFirstTrainer(TrainerMapper.toDomainModel(battleDTO.getFirstTrainer()));
-	//	battle.setSecondTrainer(TrainerMapper.toDomainModel(battleDTO.getSecondTrainer()));
 		battle.setWinnerId(battleDTO.getWinnerId());
+
+		battle.getFirstTrainer().getRecord().setBattlesPlayed(battle.getFirstTrainer().getRecord().getBattlesPlayed()+1);
+		battle.getSecondTrainer().getRecord().setBattlesPlayed(battle.getSecondTrainer().getRecord().getBattlesPlayed()+1);
+
+		if (battleDTO.getWinnerId() == battle.getFirstTrainer().getId()) {
+			battle.getFirstTrainer().getRecord().setBattlesWon(battle.getFirstTrainer().getRecord().getBattlesWon() + 1);
+		} else {
+			battle.getSecondTrainer().getRecord().setBattlesWon(battle.getSecondTrainer().getRecord().getBattlesWon()+1);
+		}
 
 		em.persist(battle);
 		em.getTransaction().commit();

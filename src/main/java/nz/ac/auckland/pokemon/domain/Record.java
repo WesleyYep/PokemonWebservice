@@ -3,7 +3,6 @@ package nz.ac.auckland.pokemon.domain;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,46 +18,33 @@ import java.util.Set;
  *
  */
 
-//@Embeddable
-//@XmlRootElement(name="record")
-//@XmlAccessorType(XmlAccessType.FIELD)
-@Entity
+@Embeddable
+@XmlRootElement(name="record")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Record {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
-	
-//	@XmlElement(name="battlesWon")
+	@XmlElement(name="battlesWon")
 	private int battlesWon;
 	
-//	@XmlElement(name="battlesLost")
-	private int battlesLost;
+	@XmlElement(name="battlesPlayed")
+	private int battlesPlayed;
 	
-//	@XmlElement(name="badgesWon")
+	@XmlElement(name="badgesWon")
 	private int badgesWon;
 	
-//	@XmlElement(name="competitionWins")
+	@XmlElement(name="competitionWins")
 	private int competitionWins;
-	
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	 @JoinTable(
-	 name = "RECORD_BATTLES",
-	 joinColumns = @JoinColumn(name = "RECORD_ID"),
-	 inverseJoinColumns = @JoinColumn(name = "BATTLE_ID")
-	 )
-	private Set<Battle> battles = new HashSet<Battle>();
 
 	public Record() {
 		badgesWon = 0;
 		competitionWins = 0;
 		battlesWon = 0;
-		battlesLost = 0;
+		battlesPlayed = 0;
 	}
 
 	public Record(int battlesWon, int battlesLost, int badgesWon, int competitionWins) {
 		this.battlesWon = battlesWon;
-		this.battlesLost = battlesLost;
+		this.battlesPlayed = battlesLost;
 		this.badgesWon = badgesWon;
 		this.competitionWins = competitionWins;
 	}
@@ -71,12 +57,12 @@ public class Record {
 		this.battlesWon = battlesWon;
 	}
 	
-	public int getBattlesLost() {
-		return battlesLost;
+	public int getBattlesPlayed() {
+		return battlesPlayed;
 	}
 
-	public void setBattlesLost(int battlesLost) {
-		this.battlesLost = battlesLost;
+	public void setBattlesPlayed(int battlesPlayed) {
+		this.battlesPlayed = battlesPlayed;
 	}
 	
 	public int getBadgesWon() {
@@ -94,13 +80,6 @@ public class Record {
 	public void setCompetitionWins(int competitionWins) {
 		this.competitionWins = competitionWins;
 	}
-	
-	public Set<Battle> getBattles() {
-		return battles;
-	}
-	
-	public void setBattles(Set<Battle> battles) {
-		this.battles = battles;
-	}
+
 
 }

@@ -38,9 +38,6 @@ public class Battle {
 
     private long winnerId;
     
-    @ManyToMany(mappedBy = "battles")
-    private Set<Record> records = new HashSet<Record>( );
-    
     @Embedded
     private GeoPosition location;
 
