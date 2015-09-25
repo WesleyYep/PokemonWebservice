@@ -153,7 +153,6 @@ public class PokemonDTO {
 
         PokemonDTO rhs = (PokemonDTO) obj;
         return new EqualsBuilder().
-            append(id, rhs.id).
             append(name, rhs.name).
             append(nickname, rhs.nickname).
             append(gender, rhs.gender).
@@ -164,7 +163,6 @@ public class PokemonDTO {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(id).
 	            append(name).
 	            append(nickname).
 	            append(gender).

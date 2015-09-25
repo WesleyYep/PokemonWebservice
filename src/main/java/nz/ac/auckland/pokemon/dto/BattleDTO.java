@@ -168,7 +168,6 @@ public class BattleDTO {
 
 		BattleDTO rhs = (BattleDTO) obj;
 		return new EqualsBuilder().
-			append(id, rhs.id).
 			append(firstTrainer.getFirstName(), rhs.firstTrainer.getFirstName()).
 			append(secondTrainer.getFirstName(), rhs.secondTrainer.getFirstName()).
 			append(startTime, rhs.startTime).
@@ -179,7 +178,6 @@ public class BattleDTO {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31).
-				append(id).
 				append(firstTrainer.getFirstName()).
 				append(secondTrainer.getFirstName()).
 				append(startTime).

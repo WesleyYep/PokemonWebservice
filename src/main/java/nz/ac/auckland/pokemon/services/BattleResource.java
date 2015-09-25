@@ -51,8 +51,12 @@ public class BattleResource {
 	public Response createBattle(BattleDTO battleDTO) {
 		_logger.debug("Read battle: " + battleDTO);
 		em.getTransaction().begin();
-
+		Trainer t1 = em.find(Trainer.class, battleDTO.getFirstTrainer().getId());
+		Trainer t2 = em.find(Trainer.class, battleDTO.getSecondTrainer().getId());
 		Battle battle = BattleMapper.toDomainModel(battleDTO);
+		if (t1 != null) { battle.setFirstTrainer(t1); }
+		if (t2 != null) { battle.setSecondTrainer(t2); }
+		//battle.setSecondTrainer(TrainerMapper.toDomainModel(battleDTO.getSecondTrainer()));
 		em.persist(battle);
 		em.getTransaction().commit();
 

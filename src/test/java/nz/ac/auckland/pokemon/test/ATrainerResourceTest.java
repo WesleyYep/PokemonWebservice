@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
  * @author Ian Warren
  *
  */
-public class TrainerResourceTest
+public class ATrainerResourceTest
 {
-    private Logger _logger = LoggerFactory.getLogger(TrainerResourceTest.class);
+    private Logger _logger = LoggerFactory.getLogger(ATrainerResourceTest.class);
 
     @Test
     public void testsPass() {}
@@ -74,8 +74,7 @@ public class TrainerResourceTest
             TrainerDTO trainerDTO = client.target(location).request().get(TrainerDTO.class);
             // Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
             _logger.info("Retrieved Trainer:\n" + trainerDTO.toString());
-
-
+            TestConstants.trainer1 = trainerDTO;
             TrainerDTO updateTrainer = new TrainerDTO(ash.getLastName(), "newAsh", Gender.MALE, new LocalDate(1960, 5, 17), new Record());
 
             // Send a HTTP PUT request to the Web service. The request URI is
@@ -101,7 +100,7 @@ public class TrainerResourceTest
                 fail();
             }
             location = response.getLocation().toString() + "/" + TestConstants.trainerId;
-            _logger.debug("Trying to update contact at location: " + location);
+            _logger.info("Trying to update contact at location: " + location);
             response.close();
             response = client.target(location).request().put(null);
             status = response.getStatus();

@@ -86,10 +86,9 @@ public class BattleResourceTest
 
     private void createBattle(TrainerDTO opponent) {
         Client client = ClientBuilder.newClient();
-        TrainerDTO bob = new TrainerDTO("smith", "bob", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
 
         BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 21, 57),
-                bob, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
+                TestConstants.trainer1, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
         Response response = client.target("http://localhost:10000/services/battles")
                 .request().post(Entity.xml(defaultBattle));
         int status = response.getStatus();

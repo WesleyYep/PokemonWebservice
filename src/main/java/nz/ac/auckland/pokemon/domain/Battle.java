@@ -2,6 +2,8 @@ package nz.ac.auckland.pokemon.domain;
 
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -111,5 +113,29 @@ public class Battle {
     public void setLocation(GeoPosition location) {
     	this.location = location;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Battle))
+            return false;
+        if (obj == this)
+            return true;
 
+        Battle rhs = (Battle) obj;
+        return new EqualsBuilder().
+                append(firstTrainer.getFirstName(), rhs.firstTrainer.getFirstName()).
+                append(secondTrainer.getFirstName(), rhs.secondTrainer.getFirstName()).
+                append(startTime, rhs.startTime).
+                append(endTime, rhs.endTime).
+                isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31).
+                append(firstTrainer.getFirstName()).
+                append(secondTrainer.getFirstName()).
+                append(startTime).
+                append(endTime).
+                toHashCode();
+    }
 }

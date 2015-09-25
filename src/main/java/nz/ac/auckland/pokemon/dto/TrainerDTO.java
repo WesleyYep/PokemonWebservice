@@ -159,7 +159,6 @@ public class TrainerDTO {
 
         TrainerDTO rhs = (TrainerDTO) obj;
         return new EqualsBuilder().
-            append(id, rhs.id).
             append(lastName, rhs.lastName).
             append(firstName, rhs.firstName).
             append(gender, rhs.gender).
@@ -170,7 +169,6 @@ public class TrainerDTO {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(id).
 	            append(lastName).
 	            append(firstName).
 	            append(gender).

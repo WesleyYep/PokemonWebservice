@@ -1,5 +1,7 @@
 package nz.ac.auckland.pokemon.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
@@ -115,5 +117,30 @@ public class Trainer {
 		this.record = record;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Trainer))
+			return false;
+		if (obj == this)
+			return true;
+
+		Trainer rhs = (Trainer) obj;
+		return new EqualsBuilder().
+				append(lastName, rhs.lastName).
+				append(firstName, rhs.firstName).
+				append(gender, rhs.gender).
+				append(dateOfBirth, rhs.dateOfBirth).
+				isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).
+				append(lastName).
+				append(firstName).
+				append(gender).
+				append(dateOfBirth).
+				toHashCode();
+	}
 	
 }
