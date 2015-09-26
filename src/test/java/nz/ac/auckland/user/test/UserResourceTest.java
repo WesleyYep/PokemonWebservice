@@ -7,8 +7,10 @@ import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import nz.ac.auckland.pokemon.test.TestConstants;
+import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,12 @@ import static org.junit.Assert.fail;
 public class UserResourceTest
 {
     private Logger _logger = LoggerFactory.getLogger(UserResourceTest.class);
+
+    @BeforeClass
+    public static void initializeIfNeeded() {
+        InitialiseTest.init();
+    }
+
 
     @Test
     public void testsPass() {}

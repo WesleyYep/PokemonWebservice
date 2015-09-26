@@ -12,7 +12,9 @@ import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
 import nz.ac.auckland.pokemon.dto.TrainerListDTO;
+import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.LocalDate;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,12 @@ import org.slf4j.LoggerFactory;
 public class ATrainerResourceTest
 {
     private Logger _logger = LoggerFactory.getLogger(ATrainerResourceTest.class);
+
+    @BeforeClass
+    public static void initializeIfNeeded() {
+        InitialiseTest.init();
+    }
+
 
     @Test
     public void testsPass() {}

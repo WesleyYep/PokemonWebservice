@@ -40,20 +40,20 @@ public class UserResource {
                 .build();
     }
 
-    @POST
-    @Path("clearAllDB")
-    public void clearDatabase() {
-        _logger.info("Clearing database");
-        em.getTransaction().begin();
-        em.createNativeQuery("drop table AUDITENTRY").executeUpdate();
-        em.createNativeQuery("drop table BATTLE").executeUpdate();
-        em.createNativeQuery("drop table MOVES").executeUpdate();
-        em.createNativeQuery("drop table POKEMON").executeUpdate();
-        em.createNativeQuery("drop table POKEMON_TRAINER").executeUpdate();
-        em.createNativeQuery("drop table TRAINER").executeUpdate();
-        em.createNativeQuery("drop table TRAINER_CONTACTS").executeUpdate();
-        em.createNativeQuery("drop table USER").executeUpdate();
-        em.getTransaction().commit();
-    }
+//    @POST
+//    @Path("clearAllDB")
+//    public void clearDatabase() {
+//        _logger.info("Clearing database");
+//        em.getTransaction().begin();
+//        em.createNativeQuery("drop table AUDITENTRY").executeUpdate();
+//        em.createNativeQuery("drop table BATTLE").executeUpdate();
+//        em.createNativeQuery("drop table MOVES").executeUpdate();
+//        em.createNativeQuery("drop table POKEMON").executeUpdate();
+//        em.createNativeQuery("drop table POKEMON_TRAINER").executeUpdate();
+//        em.createNativeQuery("drop table TRAINER").executeUpdate();
+//        em.createNativeQuery("drop table TRAINER_CONTACTS").executeUpdate();
+//        em.createNativeQuery("drop table USER").executeUpdate();
+//        em.getTransaction().commit();
+//    }
 
 }

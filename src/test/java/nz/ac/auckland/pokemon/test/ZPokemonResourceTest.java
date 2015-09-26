@@ -7,6 +7,8 @@ import nz.ac.auckland.pokemon.domain.Type;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.services.PokemonMapper;
 
+import nz.ac.auckland.setup.test.InitialiseTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,12 @@ import static org.junit.Assert.fail;
 public class ZPokemonResourceTest
 {
     private Logger _logger = LoggerFactory.getLogger(ZPokemonResourceTest.class);
+
+    @BeforeClass
+    public static void initializeIfNeeded() {
+        InitialiseTest.init();
+    }
+
 
     @Test
     public void testsPass() {}

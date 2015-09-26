@@ -8,9 +8,11 @@ import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
 import nz.ac.auckland.pokemon.services.BattleMapper;
+import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,12 @@ import static org.junit.Assert.fail;
 public class BattleResourceTest
 {
     private Logger _logger = LoggerFactory.getLogger(BattleResourceTest.class);
+
+    @BeforeClass
+    public static void initializeIfNeeded() {
+        InitialiseTest.init();
+    }
+
 
     @Test
     public void testsPass() {}

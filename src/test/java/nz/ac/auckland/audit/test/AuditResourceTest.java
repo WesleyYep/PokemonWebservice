@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
+import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,11 +28,8 @@ public class AuditResourceTest
 	private Logger _logger = LoggerFactory.getLogger(AuditResourceTest.class);
 
     @BeforeClass
-    public static void clearDatabase() {
-        Client client = ClientBuilder.newClient();
-        client.target("http://localhost:10000/services/user/clearAllDB")
-            .request().post(null);
-        client.close();
+    public static void initializeIfNeeded() {
+        InitialiseTest.init();
     }
 
    @Test

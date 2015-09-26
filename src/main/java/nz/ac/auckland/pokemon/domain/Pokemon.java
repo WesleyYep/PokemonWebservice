@@ -44,10 +44,10 @@ public class Pokemon {
 	@CollectionTable(name = "MOVES")
     protected Set<Move> moves = new HashSet<Move>();
 
-	public Pokemon(long id, String lastName, String firstName, Gender gender, int level, Set<Move> moves) {
+	public Pokemon(long id, String name, String nickname, Gender gender, int level, Set<Move> moves) {
 		this.id = id;
-		this.name = lastName;
-		this.nickname = firstName;
+		this.name = name;
+		this.nickname = nickname;
 		this.gender = gender;
 		this.level = level;
         this.moves = moves;

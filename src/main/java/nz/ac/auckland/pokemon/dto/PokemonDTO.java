@@ -53,8 +53,8 @@ public class PokemonDTO {
 	 * which is optional (not all Trainers are subject to a curfew).
      *
 	 */
-	public PokemonDTO(String lastName, String firstName, Gender gender, int level, Set<Move> moves) throws IllegalArgumentException {
-		this(0, lastName, firstName, gender, level, moves);
+	public PokemonDTO(String name, String nickname, Gender gender, int level, Set<Move> moves) throws IllegalArgumentException {
+		this(0, name, nickname, gender, level, moves);
 	}
 
 	/**
@@ -63,10 +63,10 @@ public class PokemonDTO {
 	 * implementation when creating a DTO Parolee from a domain-model Parolee
 	 * object.
 	 */
-	public PokemonDTO(long id, String lastName, String firstName, Gender gender, int level, Set<Move> moves) {
+	public PokemonDTO(long id, String name, String nickname, Gender gender, int level, Set<Move> moves) {
 		this.id = id;
-		this.name = lastName;
-		this.nickname = firstName;
+		this.name = name;
+		this.nickname = nickname;
 		this.gender = gender;
 		this.level = level;
         this.moves = moves;
