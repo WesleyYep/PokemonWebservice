@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -37,6 +38,22 @@ public class UserResource {
 
         return Response.created(URI.create("/user/" + user.getId()))
                 .build();
+    }
+
+    @POST
+    @Path("clearAllDB")
+    public void clearDatabase() {
+        _logger.info("Clearing database");
+        em.getTransaction().begin();
+        em.createNativeQuery("drop table AUDITENTRY").executeUpdate();
+        em.createNativeQuery("drop table BATTLE").executeUpdate();
+        em.createNativeQuery("drop table MOVES").executeUpdate();
+        em.createNativeQuery("drop table POKEMON").executeUpdate();
+        em.createNativeQuery("drop table POKEMON_TRAINER").executeUpdate();
+        em.createNativeQuery("drop table TRAINER").executeUpdate();
+        em.createNativeQuery("drop table TRAINER_CONTACTS").executeUpdate();
+        em.createNativeQuery("drop table USER").executeUpdate();
+        em.getTransaction().commit();
     }
 
 }

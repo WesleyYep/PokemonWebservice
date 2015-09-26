@@ -16,6 +16,11 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static org.junit.Assert.fail;
 
 /**
@@ -35,6 +40,23 @@ public class UserResourceTest
 
     @Test
     public void testsPass() {}
+
+    @Test
+    public void testAjaxClient() {
+        try {
+            _logger.info("Testing Ajax client ...");
+
+            Desktop.getDesktop().browse(new URI("http://localhost:10000"));
+            Thread.sleep(5000);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void testUserResource()
