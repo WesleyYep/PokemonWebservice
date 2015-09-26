@@ -34,6 +34,7 @@ public class PokemonApplication extends Application
 	  singletons.add(new TrainerResource());
 	  singletons.add(new PokemonResource());
 	  singletons.add(new BattleResource());
+	  singletons.add(new UserResource());
 	  components.add(Auditor.class);
    }
 

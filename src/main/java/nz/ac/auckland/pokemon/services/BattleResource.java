@@ -39,7 +39,6 @@ public class BattleResource {
 	private static Logger _logger = LoggerFactory.getLogger(BattleResource.class);
 	private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 			.createEntityManager();
-	private Executor executor = Executors.newSingleThreadExecutor();
 	List<AsyncResponse> responses = new ArrayList<AsyncResponse>();
 
 	/**
