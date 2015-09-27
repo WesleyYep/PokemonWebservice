@@ -1,36 +1,20 @@
 package nz.ac.auckland.pokemon.services;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resources;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-
 import nz.ac.auckland.pokemon.dto.TrainerListDTO;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.domain.Trainer;
-import nz.ac.auckland.pokemon.domain.Gender;
 
 /**
  * Webservice methods for /trainers
@@ -76,7 +60,7 @@ public class TrainerResource {
 	 */
 	@GET
 	@Path("{id}")
-	@Produces("application/xml")
+	@Produces({"application/xml","application/json"})
 	public TrainerDTO getTrainer(@PathParam("id") long id) {
 		_logger.debug("Retrieving trainer: " + id);
 		em.getTransaction().begin();

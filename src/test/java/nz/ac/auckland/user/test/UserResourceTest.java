@@ -6,6 +6,7 @@ import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
+import nz.ac.auckland.pokemon.services.PasswordHasher;
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -73,7 +74,7 @@ public class UserResourceTest
         try {
             _logger.info("Creating a new User ...");
 
-            User wesley = new User("wesleyyep", "wesley", "yep");
+            User wesley = new User("wesleyyep", "wesley", "yep", PasswordHasher.passwordHash("password"));
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/user")

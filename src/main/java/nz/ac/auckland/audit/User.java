@@ -1,5 +1,7 @@
 package nz.ac.auckland.audit;
 
+import nz.ac.auckland.pokemon.services.PasswordHasher;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,15 +28,20 @@ public class User {
 
 	@XmlElement
 	private String _firstname;
+
+	@XmlElement
+	@Column(nullable = false)
+	private String passwordHash;
 	
-	public User(String username, String lastname, String firstname) {
+	public User(String username, String lastname, String firstname, String passwordHash) {
 		_username = username;
 		_lastname = lastname;
 		_firstname = firstname;
+		this.passwordHash = passwordHash;
 	}
 	
 	public User(String username) {
-		this(username, null, null);
+		this(username, null, null, PasswordHasher.passwordHash("default"));
 	}
 	
 	public User() {}
@@ -53,5 +60,13 @@ public class User {
 	
 	public String getFirstname() {
 		return _firstname;
+	}
+
+	public String getPasswordHash() {
+		return passwordHash;
+	}
+
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
 	}
 }

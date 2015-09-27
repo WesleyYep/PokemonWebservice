@@ -1,12 +1,14 @@
 package nz.ac.auckland.audit;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -49,13 +51,20 @@ public class Auditor implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext cxt) throws IOException {
 		_logger.debug("Auditor is filtering");
 		
-		// Read the value of the cookie named "username". If there is no such
-		// cookie, use DEFAULT_USERNAME.
+		// Read the value of the cookieUsername named "username". If there is no such
+		// cookieUsername, use DEFAULT_USERNAME.
 		Map<String,Cookie> cookies = cxt.getCookies();
 		String username = DEFAULT_USERNAME;
-		Cookie cookie = cookies.get("username");
-		if(cookie != null) {
-			username = cookie.getValue();
+		Cookie cookieUsername = cookies.get("username");
+		Cookie cookiePassword = cookies.get("password");
+
+//		if (cookieUsername == null || cookiePassword == null) {
+//			cxt.abortWith(Response.status(403).type("text/plain")
+//					.entity("get lost, loser!").build());
+//		}
+
+		if(cookieUsername != null) {
+			username = cookieUsername.getValue();
 		}
 
 		EntityManager em = Persistence.createEntityManagerFactory("auditorPU")

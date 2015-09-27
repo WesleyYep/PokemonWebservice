@@ -5,6 +5,7 @@ import nz.ac.auckland.pokemon.domain.Record;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.joda.time.LocalDate;
 
 import nz.ac.auckland.pokemon.jaxb.LocalDateAdapter;
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * An instance of this class represents a DTO Trainer
  *
  */
-
+@JsonIgnoreProperties
 @XmlRootElement(name="trainer")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TrainerDTO {
@@ -54,7 +55,7 @@ public class TrainerDTO {
 	 * last-known-position field is not required. Of the constructor's
 	 * parameters, all fields must be non-null with the exception of curfew,
 	 * which is optional (not all Trainers are subject to a curfew).
-     *
+	 *
 	 */
 	public TrainerDTO(String lastName, String firstName, Gender gender, LocalDate dateOfBirth, Record record) throws IllegalArgumentException {
 		this(0, lastName, firstName, gender, dateOfBirth, record);
@@ -77,6 +78,10 @@ public class TrainerDTO {
 
 	public long getId() {
 		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getLastName() {
@@ -153,27 +158,27 @@ public class TrainerDTO {
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TrainerDTO))
-            return false;
-        if (obj == this)
-            return true;
+			return false;
+		if (obj == this)
+			return true;
 
-        TrainerDTO rhs = (TrainerDTO) obj;
-        return new EqualsBuilder().
-            append(lastName, rhs.lastName).
-            append(firstName, rhs.firstName).
-            append(gender, rhs.gender).
-            append(dateOfBirth, rhs.dateOfBirth).
-            isEquals();
+		TrainerDTO rhs = (TrainerDTO) obj;
+		return new EqualsBuilder().
+			append(lastName, rhs.lastName).
+			append(firstName, rhs.firstName).
+			append(gender, rhs.gender).
+			append(dateOfBirth, rhs.dateOfBirth).
+			isEquals();
 	}
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(lastName).
-	            append(firstName).
-	            append(gender).
-                append(dateOfBirth).
-	            toHashCode();
+				append(lastName).
+				append(firstName).
+				append(gender).
+				append(dateOfBirth).
+				toHashCode();
 	}
 }
 

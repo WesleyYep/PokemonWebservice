@@ -73,7 +73,7 @@ public class AuditResourceTest
 
           TrainerDTO dawn = new TrainerDTO("piplup", "dawn", Gender.FEMALE, new LocalDate(1968, 12, 5), new Record());
 
-          Cookie cookie =new Cookie("username","test");
+          Cookie cookie = new Cookie("username","test");
           Response response = client.target("http://localhost:10000/services/trainers")
                  .request().cookie(cookie).post(Entity.xml(dawn));
 

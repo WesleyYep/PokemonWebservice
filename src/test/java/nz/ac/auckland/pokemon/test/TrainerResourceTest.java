@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import nz.ac.auckland.pokemon.domain.Gender;
@@ -36,12 +38,24 @@ public class TrainerResourceTest
 
     @BeforeClass
     public static void initializeIfNeeded() {
+
         InitialiseTest.init();
     }
 
 
     @Test
     public void testsPass() {}
+
+    @Test
+    public void testGetJSONTrainer() {
+        Client client = ClientBuilder.newClient();
+        try {
+            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers/1").request().accept(MediaType.APPLICATION_JSON).get(TrainerDTO.class);
+            _logger.info("Got Trainer from json: " + trainerDTO.toString());
+        } finally {
+            client.close();
+        }
+    }
 
     @Test
     public void testTrainerResource()
