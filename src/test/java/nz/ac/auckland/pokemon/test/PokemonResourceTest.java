@@ -5,6 +5,7 @@ import nz.ac.auckland.pokemon.domain.Move;
 import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.domain.Type;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
+import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import nz.ac.auckland.pokemon.services.PokemonMapper;
 
 import nz.ac.auckland.setup.test.InitialiseTest;
@@ -34,9 +35,9 @@ import static org.junit.Assert.fail;
  * @author Ian Warren
  *
  */
-public class ZPokemonResourceTest
+public class PokemonResourceTest
 {
-    private Logger _logger = LoggerFactory.getLogger(ZPokemonResourceTest.class);
+    private Logger _logger = LoggerFactory.getLogger(PokemonResourceTest.class);
 
     @BeforeClass
     public static void initializeIfNeeded() {
@@ -82,18 +83,25 @@ public class ZPokemonResourceTest
             // Close the connection to the Web service.
             response.close();
 
-            // Query the Web service for the new Trainer. Send a HTTP GET request.
+            // Query the Web service for the new Pokemon. Send a HTTP GET request.
             _logger.info("Querying the Pokemon ...");
             PokemonDTO pokemonDTO = client.target(location).request().get(PokemonDTO.class);
             Pokemon pokemon = PokemonMapper.toDomainModel(pokemonDTO);
             _logger.info("Retrieved Pokemon:\n" + pokemonDTO.toString());
-            _logger.info("Trainer is: " + TestConstants.trainerId);
+
+            //Query the Web service for a trainer
+            _logger.info(("Querying trainer James"));
+            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers?firstName=james&lastName=smith&dob=1992-12-06").request().get(TrainerDTO.class);
+            _logger.info("Retrieved Trainer James:\n" + trainerDTO.toString());
+
+            long trainerId = trainerDTO.getId();
+            _logger.info("Pokemon will be caught by trainer id: " + trainerId);
 
             // Send a HTTP PUT request to the Web service. The request URI is
             // that retrieved from the Web service (the response to the GET message)
             // and the message body is the above XML.
             //This PUT REQUEST should be called when a pokemon is caught by a trainer
-            location += "/" + TestConstants.trainerId;
+            location += "/" + trainerId;
             _logger.info("URI for sending caught PUT request: " + location); //the location should be ..../pokemon_id/trainer_id
 
             response = client.target(location).request().put(null);

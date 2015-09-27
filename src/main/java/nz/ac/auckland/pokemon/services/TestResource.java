@@ -13,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.security.Policy;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -49,11 +50,30 @@ public class TestResource {
         _logger.info("Initialising database");
         em.getTransaction().begin();
 
-        em.persist(new Trainer(0, "smith", "james", Gender.MALE, new LocalDate(1992, 12, 6).toDateTimeAtStartOfDay().toDate(), new Record()));
-        em.persist(new Trainer(0, "jones", "john", Gender.MALE, new LocalDate(1991, 7, 7).toDateTimeAtStartOfDay().toDate(), new Record()));
-        em.persist(new Trainer(0, "smith", "jesse", Gender.FEMALE, new LocalDate(1990, 3, 12).toDateTimeAtStartOfDay().toDate(), new Record()));
-        em.persist(new Trainer(0, "parker", "tom", Gender.MALE, new LocalDate(1995, 4, 24).toDateTimeAtStartOfDay().toDate(), new Record()));
-        em.persist(new Trainer(0, "potter", "harry", Gender.MALE, new LocalDate(1997, 2, 16).toDateTimeAtStartOfDay().toDate(), new Record()));
+        Record r1 = new Record(100,21, 2, 1);
+        Record r2 = new Record(15,230, 1, 0);
+        Record r3 = new Record(543,212, 8, 3);
+        Record r4 = new Record(43,44, 3, 10);
+        Record r5 = new Record(259,0, 9, 0);
+
+        Trainer james = new Trainer(0, "smith", "james", Gender.MALE, new LocalDate(1992, 12, 6).toDateTimeAtStartOfDay().toDate(), r1);
+        Trainer john = new Trainer(0, "jones", "john", Gender.MALE, new LocalDate(1991, 7, 7).toDateTimeAtStartOfDay().toDate(), r2);
+        Trainer jesse = new Trainer(0, "smith", "jesse", Gender.FEMALE, new LocalDate(1990, 3, 12).toDateTimeAtStartOfDay().toDate(), r3);
+        Trainer tom = new Trainer(0, "riddle", "tom", Gender.MALE, new LocalDate(1995, 4, 24).toDateTimeAtStartOfDay().toDate(), r4);
+        Trainer harry = new Trainer(0, "potter", "harry", Gender.MALE, new LocalDate(1997, 2, 16).toDateTimeAtStartOfDay().toDate(), r5);
+
+        james.addContact(jesse);
+        jesse.addContact(james);
+        tom.addContact(harry);
+        tom.addContact(john);
+        harry.addContact(james);
+        harry.addContact(jesse);
+
+        em.persist(james);
+        em.persist(john);
+        em.persist(jesse);
+        em.persist(tom);
+        em.persist(harry);
 
         Move thunderbolt = new Move("thunderbolt", 90, 100, Type.ELECTRIC);
         Move bugbuzz = new Move("bug buzz", 80, 100, Type.BUG);
@@ -64,14 +84,32 @@ public class TestResource {
         Move psychic = new Move("psychic", 90, 100, Type.PSYCHIC);
         Move dynamicpunch = new Move("dynamic punch", 100, 50, Type.FIGHTING);
 
-        em.persist(new Pokemon(0, "wobbuffet", "wobbly", Gender.MALE, 3, new HashSet<Move>(Arrays.asList(psychic, destinybond))));
-        em.persist(new Pokemon(0, "garchomp", "power dragon", Gender.MALE, 3, new HashSet<Move>(Arrays.asList(earthquake, outrage))));
-        em.persist(new Pokemon(0, "gengar", "ghostly", Gender.FEMALE, 3, new HashSet<Move>(Arrays.asList(nightslash, destinybond, thunderbolt))));
+        Pokemon wobbuffet = new Pokemon(0, "wobbuffet", "wobbly", Gender.MALE, 30, new HashSet<Move>(Arrays.asList(psychic, destinybond)));
+        Pokemon garchomp = new Pokemon(0, "garchomp", "power dragon", Gender.MALE, 100, new HashSet<Move>(Arrays.asList(earthquake, outrage)));
+        Pokemon gengar = new Pokemon(0, "gengar", "ghostly", Gender.FEMALE, 60, new HashSet<Move>(Arrays.asList(nightslash, destinybond, thunderbolt)));
+        Pokemon machamp = new Pokemon(0, "machamp", "champion", Gender.MALE, 29, new HashSet<Move>(Arrays.asList(dynamicpunch)));
+        Pokemon raichu = new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+
+        wobbuffet.setTrainer(james);
+        garchomp.setTrainer(harry);
+        gengar.setTrainer(tom);
+        machamp.setTrainer(tom);
+        raichu.setTrainer(jesse);
+
+        em.persist(wobbuffet);
+        em.persist(garchomp);
+        em.persist(gengar);
         em.persist(new Pokemon(0, "accelgor", "accelerator", Gender.FEMALE, 3, new HashSet<Move>(Arrays.asList(bugbuzz))));
-        em.persist(new Pokemon(0, "machamp", "champion", Gender.MALE, 3, new HashSet<Move>(Arrays.asList(dynamicpunch))));
-        em.persist(new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 3, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz))));
+        em.persist(machamp);
+        em.persist(raichu);
         em.persist(new Pokemon(0, "dragonite", "bigflyingbird", Gender.FEMALE, 3, new HashSet<Move>(Arrays.asList(outrage, earthquake, thunderbolt))));
 
+        em.persist(new Battle(0, new LocalDate(1992, 12, 6).toDate(), new LocalDate(1992, 12, 7).toDate(),
+                jesse, harry, harry.getId(), new GeoPosition(20,30)));
+        em.persist(new Battle(0, new LocalDate(2015, 8, 9).toDate(), new LocalDate(2015, 8, 10).toDate(),
+                james, tom, james.getId(), new GeoPosition(45,45)));
+        em.persist(new Battle(0, new LocalDate(2012, 12, 21).toDate(), new LocalDate(2012, 12, 22).toDate(),
+                john, james, james.getId(), new GeoPosition(45,45)));
 
         em.getTransaction().commit();
     }

@@ -22,6 +22,7 @@ import nz.ac.auckland.pokemon.dto.TrainerDTO;
 
 import nz.ac.auckland.pokemon.dto.TrainerListDTO;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
@@ -93,7 +94,28 @@ public class TrainerResource {
 
 	@GET
 	@Produces("application/xml")
+	public TrainerDTO getTrainerByNameAndDOB(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
+											 @QueryParam("dob") String dob) {
+		_logger.info("Retrieving trainer: " + firstName + " " + lastName + " " + dob);
+		em.getTransaction().begin();
+		// Get the full Parolee object from the database.
+		_logger.info("running query: SELECT t FROM Trainer t WHERE firstname='" + firstName + "' AND lastname='" + lastName + "' AND dateofbirth='" + dob + "'");
+		Trainer trainer = (Trainer) em.createQuery("SELECT t FROM Trainer t WHERE firstname='" + firstName + "' AND lastname='" + lastName + "' AND dateofbirth='" + dob + "'").getSingleResult();
+
+		// Convert the full Parolee to a short Parolee.
+		TrainerDTO trainerDTO = TrainerMapper.toDto(trainer);
+		em.getTransaction().commit();
+
+		_logger.info("Retrieved trainer: " + trainer);
+
+		return trainerDTO;
+	}
+
+	@GET
+	@Path("all")
+	@Produces("application/xml")
 	public TrainerListDTO findAll(@QueryParam("start") int start, @QueryParam("size") int size) {
+		em.getTransaction().begin();
 		List<Trainer> trainers = em.createQuery("SELECT t FROM Trainer t").getResultList();
 		List<TrainerDTO> trainerDTOs = new ArrayList<TrainerDTO>();
 
@@ -121,6 +143,8 @@ public class TrainerResource {
 
 		trainersDTO.setLinks(links);
 		trainersDTO.setTrainers(trainerDTOs);
+
+		em.getTransaction().commit();
 		return trainersDTO;
 	}
 
@@ -149,6 +173,7 @@ public class TrainerResource {
 		return Response.created(URI.create("/trainers/" + trainer.getId()))
 				.build();
 	}
+
 
     /**
      * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}/{contact_id}.

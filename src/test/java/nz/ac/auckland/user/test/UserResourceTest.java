@@ -6,7 +6,6 @@ import nz.ac.auckland.pokemon.domain.GeoPosition;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-import nz.ac.auckland.pokemon.test.TestConstants;
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

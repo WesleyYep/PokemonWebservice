@@ -74,7 +74,14 @@ public class BattleResourceTest
 
             //new trainer will send a post request to accept the battle request from the first trainer
             //this should actually occur before the previous callback
-            TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12) , new Record());
+            //TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12) , new Record());
+
+            //Query the Web service for a trainer
+            _logger.info(("Querying trainer John"));
+            TrainerDTO john = client2.target("http://localhost:10000/services/trainers?firstName=john&lastName=jones&dob=1991-07-07").request().get(TrainerDTO.class);
+            _logger.info("Retrieved Trainer John:\n" + john.toString());
+
+
             Response response = client2.target("http://localhost:10000/services/battles/challenge")
                     .request().post(Entity.xml(john));
             int status = response.getStatus();
@@ -95,11 +102,17 @@ public class BattleResourceTest
     private void createBattle(TrainerDTO opponent) {
         Client client = ClientBuilder.newClient();
 
+        _logger.info(("Querying trainer Harry"));
+        TrainerDTO harry = client.target("http://localhost:10000/services/trainers?firstName=harry&lastName=potter&dob=1997-02-16").request().get(TrainerDTO.class);
+        _logger.info("Retrieved Trainer Harry:\n" + harry.toString());
+
         BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 21, 57),
-                TestConstants.trainer1, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
+                harry, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
+
         Response response = client.target("http://localhost:10000/services/battles")
                 .request().post(Entity.xml(defaultBattle));
         int status = response.getStatus();
+
         _logger.info("Location: " + response.getLocation().toString());
         if (status != 201) {
             _logger.error("Failed to create Battle; Web service responded with: " + status);

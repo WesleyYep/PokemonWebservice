@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  * @author Ian Warren
  *
  */
-public class ATrainerResourceTest
+public class TrainerResourceTest
 {
-    private Logger _logger = LoggerFactory.getLogger(ATrainerResourceTest.class);
+    private Logger _logger = LoggerFactory.getLogger(TrainerResourceTest.class);
 
     @BeforeClass
     public static void initializeIfNeeded() {
@@ -77,13 +77,11 @@ public class ATrainerResourceTest
             // Close the connection to the Web service.
             response.close();
 
-            TestConstants.trainerId = id;
             // Query the Web service for the new Trainer. Send a HTTP GET request.
             _logger.info("Querying the Trainer ...");
             TrainerDTO trainerDTO = client.target(location).request().get(TrainerDTO.class);
             // Trainer trainer = TrainerMapper.toDomainModel(trainerDTO);
             _logger.info("Retrieved Trainer:\n" + trainerDTO.toString());
-            TestConstants.trainer1 = trainerDTO;
             TrainerDTO updateTrainer = new TrainerDTO(ash.getLastName(), "newAsh", Gender.MALE, new LocalDate(1960, 5, 17), new Record());
 
             // Send a HTTP PUT request to the Web service. The request URI is
@@ -108,7 +106,7 @@ public class ATrainerResourceTest
                 _logger.error("Failed to create Trainer; Web service responded with: " + status);
                 fail();
             }
-            location = response.getLocation().toString() + "/" + TestConstants.trainerId;
+            location = response.getLocation().toString() + "/" + id;
             _logger.info("Trying to update contact at location: " + location);
             response.close();
             response = client.target(location).request().put(null);
@@ -121,7 +119,7 @@ public class ATrainerResourceTest
 
             //now get a list of HATEOAS trainers
             _logger.info("Querying the Trainer list ...");
-            TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers")
+            TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers/all")
                     .queryParam("start", 0)
                     .queryParam("size", 3)
                     .request()

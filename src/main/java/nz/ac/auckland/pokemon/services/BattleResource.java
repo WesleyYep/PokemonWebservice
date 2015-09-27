@@ -118,7 +118,7 @@ public class BattleResource {
 	@PUT
 	@Path("{id}")
 	@Consumes("application/xml")
-	public Response updateBattle(@PathParam("id") long id, BattleDTO battleDTO) {
+	public Response endBattle(@PathParam("id") long id, BattleDTO battleDTO) {
 		em.getTransaction().begin();
 		Battle battle = em.find(Battle.class, id);
 		_logger.info("Retrieved sent Battle:\n" + battleDTO.toString());
