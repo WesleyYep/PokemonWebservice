@@ -9,8 +9,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
-import nz.ac.auckland.pokemon.dto.TrainerListDTO;
+
+import nz.ac.auckland.pokemon.domain.Battle;
+import nz.ac.auckland.pokemon.domain.Pokemon;
+import nz.ac.auckland.pokemon.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import nz.ac.auckland.pokemon.domain.Record;
@@ -102,6 +104,7 @@ public class TrainerResource {
 		em.getTransaction().begin();
 		List<Trainer> trainers = em.createQuery("SELECT t FROM Trainer t").getResultList();
 		List<TrainerDTO> trainerDTOs = new ArrayList<TrainerDTO>();
+		_logger.info("all trainer number: " + trainers.size());
 
 		for (int i = start; i < start + size; i++) {
 			trainerDTOs.add(TrainerMapper.toDto(trainers.get(i)));
@@ -113,12 +116,12 @@ public class TrainerResource {
 		if (start + size < trainers.size()) {
 			nextUri = URI.create("http://localhost:10000/services/trainers?start=" + (start+size) + "&size=" + size);
 		} else {
-			nextUri = URI.create("");
+			nextUri = URI.create("no_next_uri");
 		}
 		if (start - size >= 0) {
 			previousUri = URI.create("http://localhost:10000/services/trainers?start=" + (start-size) + "&size=" + size);
 		} else {
-			previousUri = URI.create("");
+			previousUri = URI.create("no_previous_uri");
 		}
 		_logger.info("next uri generated is: " + nextUri);
 		_logger.info("previous uri generated is: " + previousUri);
@@ -132,6 +135,139 @@ public class TrainerResource {
 		return trainersDTO;
 	}
 
+	@GET
+	@Path("{id}/getPokemon")
+	@Produces("application/xml")
+	public PokemonListDTO findAllPokemon(@QueryParam("start") int start, @QueryParam("size") int size, @PathParam("id") long trainerId) {
+		em.getTransaction().begin();
+
+		List<Pokemon> pokemons = em.createQuery("SELECT p FROM Pokemon p").getResultList();
+		List<PokemonDTO> pokemonDTOs = new ArrayList<PokemonDTO>();
+		_logger.info("all pokemon number: " + pokemons.size());
+		int i = 0;
+		while (pokemonDTOs.size() < size && i < pokemons.size()) {
+			Trainer t = pokemons.get(i).getTrainer();
+			if (t != null) {
+				if (t.getId() == trainerId) {
+					pokemonDTOs.add(PokemonMapper.toDto(pokemons.get(i)));
+				}
+			}
+			i++;
+		}
+
+		List<Link> links = new ArrayList<Link>();
+		PokemonListDTO pokemonListDTO = new PokemonListDTO();
+		URI nextUri, previousUri;
+		if (pokemonDTOs.size() == size) {
+			nextUri = URI.create("http://localhost:10000/services/" + trainerId + "/getPokemon?start=" + (start+size) + "&size=" + size);
+		} else {
+			nextUri = URI.create("no_next_uri");
+		}
+		if (start - size >= 0) {
+			previousUri = URI.create("http://localhost:10000/services/" + trainerId + "/getPokemon?start=" + (start-size) + "&size=" + size);
+		} else {
+			previousUri = URI.create("no_previous_uri");
+		}
+		_logger.info("next uri generated is: " + nextUri);
+		_logger.info("previous uri generated is: " + previousUri);
+		links.add(Link.fromUri(nextUri).rel("next").type(MediaType.APPLICATION_XML).build());
+		links.add(Link.fromUri(previousUri).rel("previous").type(MediaType.APPLICATION_XML).build());
+
+		pokemonListDTO.setLinks(links);
+		pokemonListDTO.setPokemons(pokemonDTOs);
+
+		em.getTransaction().commit();
+		return pokemonListDTO;
+	}
+
+	@GET
+	@Path("{id}/getContacts")
+	@Produces("application/xml")
+	public TrainerListDTO findAllContacts(@QueryParam("start") int start, @QueryParam("size") int size, @PathParam("id") long id) {
+
+		em.getTransaction().begin();
+		List<Trainer> trainers = em.createQuery("SELECT t FROM Trainer t").getResultList();
+
+		List<TrainerDTO> trainerDTOs = new ArrayList<TrainerDTO>();
+		Trainer trainer = em.find(Trainer.class, id);
+
+		int i = 0;
+		while(trainerDTOs.size() < size && i < trainers.size()) {
+			if (trainer.getContacts().contains(trainers.get(i))) {
+				trainerDTOs.add(TrainerMapper.toDto(trainers.get(i)));
+			}
+			i++;
+		}
+
+		List<Link> links = new ArrayList<Link>();
+		TrainerListDTO trainersDTO = new TrainerListDTO();
+		URI nextUri, previousUri;
+		if (trainerDTOs.size() == size) {
+			nextUri = URI.create("http://localhost:10000/services/trainers?start=" + (start+size) + "&size=" + size);
+		} else {
+			nextUri = URI.create("no_next_uri");
+		}
+		if (start - size >= 0) {
+			previousUri = URI.create("http://localhost:10000/services/trainers?start=" + (start-size) + "&size=" + size);
+		} else {
+			previousUri = URI.create("no_previous_uri");
+		}
+		_logger.info("next uri generated is: " + nextUri);
+		_logger.info("previous uri generated is: " + previousUri);
+		links.add(Link.fromUri(nextUri).rel("next").type(MediaType.APPLICATION_XML).build());
+		links.add(Link.fromUri(previousUri).rel("previous").type(MediaType.APPLICATION_XML).build());
+
+		trainersDTO.setLinks(links);
+		trainersDTO.setTrainers(trainerDTOs);
+
+		em.getTransaction().commit();
+		return trainersDTO;
+	}
+
+	@GET
+	@Path("{id}/getBattles")
+	@Produces("application/xml")
+	public BattleListDTO findAllBattles(@QueryParam("start") int start, @QueryParam("size") int size, @PathParam("id") long trainerId) {
+		em.getTransaction().begin();
+
+		List<Battle> battles = em.createQuery("SELECT b FROM Battle b").getResultList();
+		List<BattleDTO> battleDTOs = new ArrayList<BattleDTO>();
+		_logger.info("all battle number: " + battles.size());
+		int i = 0;
+		while (battleDTOs.size() < size && i < battles.size()) {
+			Trainer t1 = battles.get(i).getFirstTrainer();
+			Trainer t2 = battles.get(i).getSecondTrainer();
+
+			if (t1 != null && t1.getId() == trainerId || t2 != null && t2.getId() == trainerId) {
+				battleDTOs.add(BattleMapper.toDto(battles.get(i)));
+			}
+			i++;
+		}
+
+		List<Link> links = new ArrayList<Link>();
+		BattleListDTO battleListDTO = new BattleListDTO();
+		URI nextUri, previousUri;
+		if (battleDTOs.size() == size) {
+			nextUri = URI.create("http://localhost:10000/services/" + trainerId + "/getBattles?start=" + (start+size) + "&size=" + size);
+		} else {
+			nextUri = URI.create("no_next_uri");
+		}
+		if (start - size >= 0) {
+			previousUri = URI.create("http://localhost:10000/services/" + trainerId + "/getBattles?start=" + (start-size) + "&size=" + size);
+		} else {
+			previousUri = URI.create("no_previous_uri");
+		}
+		_logger.info("next uri generated is: " + nextUri);
+		_logger.info("previous uri generated is: " + previousUri);
+		links.add(Link.fromUri(nextUri).rel("next").type(MediaType.APPLICATION_XML).build());
+		links.add(Link.fromUri(previousUri).rel("previous").type(MediaType.APPLICATION_XML).build());
+
+		battleListDTO.setLinks(links);
+		battleListDTO.setBattles(battleDTOs);
+
+		em.getTransaction().commit();
+		return battleListDTO;
+	}
 
 	/**
 	 * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}.
@@ -158,30 +294,29 @@ public class TrainerResource {
 				.build();
 	}
 
+	/**
+	 * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}/{contact_id}.
+	 * a XML representation of the updated Trainer.
+	 * This method is used to add contacts between trainers
+	 */
+	@PUT
+	@Path("{id}/{contact_id}")
+	@Consumes("application/xml")
+	public Response addTrainerContact (@PathParam("id") long id, @PathParam("contact_id") long contactId) {
+		_logger.debug("Retrieving trainer: " + id + " and contact: " + contactId);
+		em.getTransaction().begin();
+		// Get the full Parolee object from the database.
+		Trainer trainer = em.find(Trainer.class, id);
+		Trainer contact = em.find(Trainer.class, contactId);
 
-    /**
-     * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}/{contact_id}.
-     * a XML representation of the updated Trainer.
-     * This method is used to add contacts between trainers
-     */
-    @PUT
-    @Path("{id}/{contact_id}")
-    @Consumes("application/xml")
-    public Response addTrainerContact (@PathParam("id") long id, @PathParam("contact_id") long contactId) {
-        _logger.debug("Retrieving trainer: " + id + " and contact: " + contactId);
-        em.getTransaction().begin();
-        // Get the full Parolee object from the database.
-        Trainer trainer = em.find(Trainer.class, id);
-        Trainer contact = em.find(Trainer.class, contactId);
+		// Update the contacts of the Trainer to be updated.
+		trainer.addContact(contact);
 
-        // Update the contacts of the Trainer to be updated.
-        trainer.addContact(contact);
-
-        em.getTransaction().commit();
-        _logger.debug("Updated trainer contact");
-        return Response.created(URI.create("/trainers/" + trainer.getId()))
-                .build();
-    }
+		em.getTransaction().commit();
+		_logger.debug("Updated trainer contact");
+		return Response.created(URI.create("/trainers/" + trainer.getId()))
+				.build();
+	}
 
 
 }

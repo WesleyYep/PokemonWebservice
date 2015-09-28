@@ -42,7 +42,9 @@ public class Pokemon {
 
 	@ElementCollection
 	@CollectionTable(name = "MOVES")
-    protected Set<Move> moves = new HashSet<Move>();
+	protected Set<Move> moves = new HashSet<Move>();
+
+	public Pokemon() {}
 
 	public Pokemon(long id, String name, String nickname, Gender gender, int level, Set<Move> moves) {
 		this.id = id;
@@ -50,7 +52,7 @@ public class Pokemon {
 		this.nickname = nickname;
 		this.gender = gender;
 		this.level = level;
-        this.moves = moves;
+		this.moves = moves;
 //		_associates = new HashSet<Parolee>();
 	}
 
@@ -102,21 +104,21 @@ public class Pokemon {
 		this.trainer = trainer;
 	}
 
-    public void learnMove(Move move) {
-        moves.add(move);
-    }
+	public void learnMove(Move move) {
+		moves.add(move);
+	}
 
-    public void forgetMove(Move move) {
-        moves.remove(move);
-    }
+	public void forgetMove(Move move) {
+		moves.remove(move);
+	}
 
-    public Set<Move> getMoves() {
-        return moves;
-    }
+	public Set<Move> getMoves() {
+		return moves;
+	}
 
-    public void setMoves(Set<Move> moves) {
-        this.moves = moves;
-    }
+	public void setMoves(Set<Move> moves) {
+		this.moves = moves;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Pokemon))

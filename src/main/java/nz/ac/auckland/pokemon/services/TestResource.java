@@ -89,12 +89,30 @@ public class TestResource {
         Pokemon gengar = new Pokemon(0, "gengar", "ghostly", Gender.FEMALE, 60, new HashSet<Move>(Arrays.asList(nightslash, destinybond, thunderbolt)));
         Pokemon machamp = new Pokemon(0, "machamp", "champion", Gender.MALE, 29, new HashSet<Move>(Arrays.asList(dynamicpunch)));
         Pokemon raichu = new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon charmander = new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon charmeleon = new Pokemon(0, "charmeleon", "charmeleon", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon charizard = new Pokemon(0, "charizard", "electric rat", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon bulbasaur = new Pokemon(0, "bulbasaur", "bulbasaur", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon ivysaur = new Pokemon(0, "ivysaur", "ivysaur", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon venusaur = new Pokemon(0, "venusaur", "venusaur", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon squirte = new Pokemon(0, "squirte", "squirte", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon wartortle = new Pokemon(0, "wartortle", "wartortle", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon blastoise = new Pokemon(0, "blastoise", "blastoise", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
 
         wobbuffet.setTrainer(james);
         garchomp.setTrainer(harry);
         gengar.setTrainer(tom);
         machamp.setTrainer(tom);
         raichu.setTrainer(jesse);
+        charmander.setTrainer(james);
+        charmeleon.setTrainer(james);
+        charizard.setTrainer(james);
+        bulbasaur.setTrainer(james);
+        ivysaur.setTrainer(james);
+        venusaur.setTrainer(james);
+        squirte.setTrainer(james);
+        wartortle.setTrainer(james);
+        blastoise.setTrainer(james);
 
         em.persist(wobbuffet);
         em.persist(garchomp);
@@ -103,6 +121,15 @@ public class TestResource {
         em.persist(machamp);
         em.persist(raichu);
         em.persist(new Pokemon(0, "dragonite", "bigflyingbird", Gender.FEMALE, 3, new HashSet<Move>(Arrays.asList(outrage, earthquake, thunderbolt))));
+        em.persist(charmander);
+        em.persist(charmeleon);
+        em.persist(charizard);
+        em.persist(bulbasaur);
+        em.persist(ivysaur);
+        em.persist(venusaur);
+        em.persist(squirte);
+        em.persist(wartortle);
+        em.persist(blastoise);
 
         em.persist(new Battle(0, new LocalDate(1992, 12, 6).toDate(), new LocalDate(1992, 12, 7).toDate(),
                 jesse, harry, harry.getId(), new GeoPosition(20,30)));

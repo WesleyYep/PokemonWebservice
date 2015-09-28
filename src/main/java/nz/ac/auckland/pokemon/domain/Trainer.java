@@ -117,6 +117,15 @@ public class Trainer {
 		this.record = record;
 	}
 
+
+	public Set<Trainer> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(Set<Trainer> contacts) {
+		this.contacts = contacts;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Trainer))
