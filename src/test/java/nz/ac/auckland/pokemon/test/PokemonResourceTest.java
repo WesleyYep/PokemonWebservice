@@ -58,7 +58,7 @@ public class PokemonResourceTest
             _logger.info("Creating a new Pokemon ...");
             Set<Move> moves = new HashSet<Move>();
             moves.add(new Move("tackle", 40, 100, Type.NORMAL));
-            PokemonDTO pikachu = new PokemonDTO("pikachu", "pika", Gender.MALE, 5, moves);
+            PokemonDTO pikachu = new PokemonDTO("pikachu", "pika", Gender.MALE, 5, moves, null);
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/pokemon")

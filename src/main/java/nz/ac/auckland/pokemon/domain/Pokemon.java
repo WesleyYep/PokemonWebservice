@@ -44,6 +44,22 @@ public class Pokemon {
 	@CollectionTable(name = "MOVES")
 	protected Set<Move> moves = new HashSet<Move>();
 
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinTable(name = "POKEMON_TEAM",
+			joinColumns =
+					@JoinColumn(name = "POKEMON_ID"),
+			inverseJoinColumns =
+					@JoinColumn(nullable = false))
+	private Team team;
+
 	public Pokemon() {}
 
 	public Pokemon(long id, String name, String nickname, Gender gender, int level, Set<Move> moves) {
@@ -53,6 +69,16 @@ public class Pokemon {
 		this.gender = gender;
 		this.level = level;
 		this.moves = moves;
+	}
+
+	public Pokemon(long id, String name, String nickname, Gender gender, int level, Set<Move> moves, Team team) {
+		this.id = id;
+		this.name = name;
+		this.nickname = nickname;
+		this.gender = gender;
+		this.level = level;
+		this.moves = moves;
+		this.team = team;
 	}
 
 	public long getId() {

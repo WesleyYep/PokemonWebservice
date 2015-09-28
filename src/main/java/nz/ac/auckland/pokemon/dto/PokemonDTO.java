@@ -41,6 +41,9 @@ public class PokemonDTO {
 	@XmlElement(name = "move")
 	private Set<Move> moves;
 
+	@XmlTransient
+	private Team team;
+
 	protected PokemonDTO() {
 
 	}
@@ -54,8 +57,8 @@ public class PokemonDTO {
 	 * which is optional (not all Trainers are subject to a curfew).
      *
 	 */
-	public PokemonDTO(String name, String nickname, Gender gender, int level, Set<Move> moves) throws IllegalArgumentException {
-		this(0, name, nickname, gender, level, moves);
+	public PokemonDTO(String name, String nickname, Gender gender, int level, Set<Move> moves, Team team) throws IllegalArgumentException {
+		this(0, name, nickname, gender, level, moves, team);
 	}
 
 	/**
@@ -64,13 +67,14 @@ public class PokemonDTO {
 	 * implementation when creating a DTO Parolee from a domain-model Parolee
 	 * object.
 	 */
-	public PokemonDTO(long id, String name, String nickname, Gender gender, int level, Set<Move> moves) {
+	public PokemonDTO(long id, String name, String nickname, Gender gender, int level, Set<Move> moves, Team team) {
 		this.id = id;
 		this.name = name;
 		this.nickname = nickname;
 		this.gender = gender;
 		this.level = level;
         this.moves = moves;
+		this.team = team;
 	}
 
 	public long getId() {
@@ -116,6 +120,15 @@ public class PokemonDTO {
     public void setMoves(Set<Move> moves) {
         this.moves = moves;
     }
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
 
 	@Override
 	public String toString() {
