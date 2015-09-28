@@ -2,6 +2,7 @@ package nz.ac.auckland.pokemon.dto;
 
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Move;
+import nz.ac.auckland.pokemon.domain.Team;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;

@@ -39,6 +39,7 @@ public class TestResource {
         em.createNativeQuery("drop table MOVES").executeUpdate();
         em.createNativeQuery("drop table POKEMON").executeUpdate();
         em.createNativeQuery("drop table POKEMON_TRAINER").executeUpdate();
+        em.createNativeQuery("drop table TEAM").executeUpdate();
         em.createNativeQuery("drop table TRAINER").executeUpdate();
         em.createNativeQuery("drop table TRAINER_CONTACTS").executeUpdate();
         em.createNativeQuery("drop table USER").executeUpdate();
@@ -113,6 +114,12 @@ public class TestResource {
         squirte.setTrainer(james);
         wartortle.setTrainer(james);
         blastoise.setTrainer(james);
+
+        Team jamesTeam = new Team(0, "epicTeam", "C", james, new HashSet<Pokemon>(Arrays.asList(charmander, ivysaur, bulbasaur)));
+        Team tomsTeam = new Team(0, "coolTeam", "B", tom, new HashSet<Pokemon>(Arrays.asList(gengar, machamp)));
+
+        em.persist(jamesTeam);
+        em.persist(tomsTeam);
 
         em.persist(wobbuffet);
         em.persist(garchomp);

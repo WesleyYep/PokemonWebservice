@@ -53,7 +53,6 @@ public class Pokemon {
 		this.gender = gender;
 		this.level = level;
 		this.moves = moves;
-//		_associates = new HashSet<Parolee>();
 	}
 
 	public long getId() {
