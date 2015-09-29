@@ -6,6 +6,7 @@ import nz.ac.auckland.pokemon.domain.TeamDTO;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.dto.PokemonListDTO;
+import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +39,13 @@ public class TeamResource {
 	 */
 	@POST
 	@Consumes("application/xml")
-	public Response createTeam(TeamDTO teamDTO) {
+	public Response createTeam(@QueryParam("trainerId") long trainerId, TeamDTO teamDTO) {
 		_logger.debug("Read team: " + teamDTO);
 		em.getTransaction().begin();
 
 		Team team = TeamMapper.toDomainModel(teamDTO);
+		Trainer trainer = em.find(Trainer.class, trainerId);
+		team.setTrainer(trainer);
 		em.persist(team);
 		em.getTransaction().commit();
 
@@ -121,23 +124,27 @@ public class TeamResource {
 	@PUT
 	@Path("{id}/updatePokemon")
 	@Consumes("application/xml")
-	public Response updateTeam(@PathParam("id") long id, @QueryParam("pokemonId") long pokemonId, @QueryParam("option") String option) {
-		_logger.debug("Updating team " + id + " by " + option + "ing pokemon: " + id);
+	public Response updateTeam(@PathParam("id") long id, PokemonListDTO pokemonListDTO) {
+		_logger.debug("Updating team " + id);
 		em.getTransaction().begin();
-		// Get the full Pokemon object from the database.
-		Pokemon pokemon = em.find(Pokemon.class, pokemonId);
 		Team team = em.find(Team.class, id);
-		if (option.equals("add")) {
-			team.getPokemon().add(pokemon);
-			pokemon.setTeam(team);
-		} else if (option.equals("remove")) {
-			team.getPokemon().remove(pokemon);
-			pokemon.setTeam(null);
+		Set<Pokemon> pokemonSet = new HashSet<Pokemon>();
+		for (PokemonDTO pokemonDTO : pokemonListDTO.getPokemons()) {
+			pokemonSet.add(PokemonMapper.toDomainModel(pokemonDTO));
 		}
-        em.persist(team);
-		em.persist(pokemon);
+		team.setPokemon(pokemonSet);
+		for (Pokemon p : pokemonSet) {
+			p.setTeam(team);
+		}
+		em.persist(team);
+		for (Pokemon p : pokemonSet) {
+			em.merge(p);
+		}
+
+		//em.persist(pokemon);
 		em.getTransaction().commit();
-		_logger.debug("Updated team: " + id + "by adding pokemon: " + pokemon);
+
+		_logger.debug("Updated team: " + id + "by adding " + pokemonListDTO.getPokemons().size() + " pokemon");
         return Response.created(URI.create("/team/" + id))
                 .build();
 	}
@@ -164,30 +171,6 @@ public class TeamResource {
 
 		em.getTransaction().commit();
 		_logger.debug("Updated team: " + team);
-		return Response.created(URI.create("/team/" + id))
-				.build();
-	}
-
-	/**
-	 * Handles incoming HTTP PUT requests for the relative URI "pokemon/{id}/{trainerId}.
-	 * Clients will call this method and pass in both a Pokemon and Trainer DTO, represent the pokemon and the trainer that caught it
-	 * .
-	 */
-	@PUT
-	@Path("{id}/updateTrainer")
-	@Consumes("application/xml")
-	public Response updateTeamTrainer(@PathParam("id") long id, @QueryParam("trainerId") long trainerId) {
-		_logger.debug("Updating trainer of team: " + id + " to trainer: " + trainerId);
-		em.getTransaction().begin();
-		// Get the full pokemon and trainer object from the database.
-		Trainer trainer = em.find(Trainer.class, id);
-		Team team = em.find(Team.class, id);
-
-		team.setTrainer(trainer);
-		em.persist(team);
-
-		em.getTransaction().commit();
-		_logger.debug("Updated trainer: " + trainer);
 		return Response.created(URI.create("/team/" + id))
 				.build();
 	}
