@@ -10,16 +10,16 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import nz.ac.auckland.pokemon.domain.Battle;
-import nz.ac.auckland.pokemon.domain.Pokemon;
+import nz.ac.auckland.pokemon.domain.*;
 import nz.ac.auckland.pokemon.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import nz.ac.auckland.pokemon.domain.Record;
-import nz.ac.auckland.pokemon.domain.Trainer;
 
 /**
  * Webservice methods for /trainers
+ * Eg. getting, updating, and posting trainers
+ * updating trainer contacts
+ * Getting trainer pokemon, teams, battles
  *
  * @author Wesley Yep
  *
@@ -66,10 +66,10 @@ public class TrainerResource {
 	public TrainerDTO getTrainer(@PathParam("id") long id) {
 		_logger.debug("Retrieving trainer: " + id);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Trainer object from the database.
 		Trainer trainer = em.find(Trainer.class, id);
 
-		// Convert the full Parolee to a short Parolee.
+		// Convert the full Trainer to a short Parolee.
 		TrainerDTO trainerDTO = TrainerMapper.toDto(trainer);
 		em.getTransaction().commit();
 
@@ -84,11 +84,11 @@ public class TrainerResource {
 											 @QueryParam("dob") String dob) {
 		_logger.info("Retrieving trainer: " + firstName + " " + lastName + " " + dob);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Trainer object from the database.
 		_logger.info("running query: SELECT t FROM Trainer t WHERE firstname='" + firstName + "' AND lastname='" + lastName + "' AND dateofbirth='" + dob + "'");
 		Trainer trainer = (Trainer) em.createQuery("SELECT t FROM Trainer t WHERE firstname='" + firstName + "' AND lastname='" + lastName + "' AND dateofbirth='" + dob + "'").getSingleResult();
 
-		// Convert the full Parolee to a short Parolee.
+		// Convert the full Trainer to a short Trainer.
 		TrainerDTO trainerDTO = TrainerMapper.toDto(trainer);
 		em.getTransaction().commit();
 
@@ -269,6 +269,23 @@ public class TrainerResource {
 		return battleListDTO;
 	}
 
+	@GET
+	@Path("{id}/team")
+	@Produces("application/xml")
+	public TeamDTO getTrainerTeam(@PathParam("id") long id) {
+		em.getTransaction().begin();
+		List<Team> teams = em.createQuery("SELECT t FROM Team t").getResultList();
+
+		for (Team t : teams) {
+			if (t.getId() == id) {
+				em.getTransaction().commit();
+				return TeamMapper.toDto(t);
+			}
+		}
+		em.getTransaction().commit();
+		throw new NotFoundException("Team not found");
+	}
+
 	/**
 	 * Handles incoming HTTP PUT requests for the relative URI "trainers/{id}.
 	 * a XML representation of the updated Trainer.
@@ -279,7 +296,7 @@ public class TrainerResource {
 	public Response updateTrainer(@PathParam("id") long id, TrainerDTO trainerDTO) {
 		_logger.debug("Retrieving trainer: " + id);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Trainer object from the database.
 		Trainer trainer = em.find(Trainer.class, id);
 
 		// Update the details of the Trainer to be updated.
@@ -305,7 +322,7 @@ public class TrainerResource {
 	public Response addTrainerContact (@PathParam("id") long id, @PathParam("contact_id") long contactId) {
 		_logger.debug("Retrieving trainer: " + id + " and contact: " + contactId);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Trainer object from the database.
 		Trainer trainer = em.find(Trainer.class, id);
 		Trainer contact = em.find(Trainer.class, contactId);
 

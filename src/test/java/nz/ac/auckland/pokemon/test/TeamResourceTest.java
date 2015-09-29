@@ -1,22 +1,11 @@
 package nz.ac.auckland.pokemon.test;
 
-import static org.junit.Assert.fail;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
-import nz.ac.auckland.pokemon.domain.Team;
 import nz.ac.auckland.pokemon.domain.TeamDTO;
 import nz.ac.auckland.pokemon.dto.BattleListDTO;
 import nz.ac.auckland.pokemon.dto.PokemonListDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-
 import nz.ac.auckland.pokemon.dto.TrainerListDTO;
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.LocalDate;
@@ -25,6 +14,14 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import static org.junit.Assert.fail;
+
 /**
  * Unit test for Testing the TrainerResource
  * The test is implemented using the JAX-RS client API
@@ -32,9 +29,9 @@ import org.slf4j.LoggerFactory;
  * @author Wesley Yep
  *
  */
-public class TrainerResourceTest
+public class TeamResourceTest
 {
-    private Logger _logger = LoggerFactory.getLogger(TrainerResourceTest.class);
+    private Logger _logger = LoggerFactory.getLogger(TeamResourceTest.class);
 
     @BeforeClass
     public static void initializeIfNeeded() {

@@ -18,39 +18,40 @@ import java.util.Set;
  *
  */
 
-@Entity
-//@XmlRootElement(name="team")
-//@XmlAccessorType(XmlAccessType.FIELD)
-public class Team {
+//@Entity
+@XmlRootElement(name="team")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class TeamDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-//	@XmlAttribute(name="id")
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+	@XmlAttribute(name="id")
 	private long id;
 
-//	@XmlElement(name="teamName")
+	@XmlElement(name="teamName")
 	private String teamName;
 
-//	@XmlElement(name="teamGrade")
+	@XmlElement(name="teamGrade")
 	private String teamGrade;
 
-//	@XmlElement(name="trainer")
-	@OneToOne(optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(unique = true)
+	@XmlTransient
 	private Trainer trainer;
 
-//	@XmlElement(name="pokemonList")
-	@OneToMany(mappedBy = "team")
+	@XmlTransient
+//	@OneToMany(cascade = CascadeType.PERSIST)
 //	@JoinColumn(name = "TEAM_ID", nullable = true)
 	private Set<Pokemon> pokemon = new HashSet<Pokemon>();
 
-	protected Team() {	}
+	protected TeamDTO() {	}
 
-	public Team(String teamName, String teamGrade, Trainer trainer, Set<Pokemon> pokemon) {
-		this(0, teamName, teamGrade, trainer, pokemon);
+	public TeamDTO(String teamName, String teamGrade, Trainer trainer, Set<Pokemon> pokemon) {
+		this.teamName = teamName;
+		this.teamGrade = teamGrade;
+		this.pokemon = pokemon;
+		this.trainer = trainer;
 	}
 
-	public Team(long id, String teamName, String teamGrade, Trainer trainer, Set<Pokemon> pokemon) {
+	public TeamDTO(long id, String teamName, String teamGrade, Trainer trainer, Set<Pokemon> pokemon) {
 		this.id = id;
 		this.teamName = teamName;
 		this.teamGrade = teamGrade;
@@ -105,7 +106,7 @@ public class Team {
 		if (obj == this)
 			return true;
 
-		Team rhs = (Team) obj;
+		TeamDTO rhs = (TeamDTO) obj;
 		return new EqualsBuilder().
 				append(teamName, rhs.teamName).
 				append(teamGrade, rhs.teamGrade).
