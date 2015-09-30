@@ -69,7 +69,7 @@ public class TrainerResourceTest
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/trainers")
-                    .request().post(Entity.xml(ash));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(ash));
 
             // Expect a HTTP 201 "Created" response from the Web service.
             int status = response.getStatus();
@@ -100,7 +100,7 @@ public class TrainerResourceTest
             // Send a HTTP PUT request to the Web service. The request URI is
             // that retrieved from the Web service (the response to the GET message)
             // and the message body is the above XML.
-            response = client.target(location).request().put(Entity.xml(updateTrainer));
+            response = client.target(location).request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(Entity.xml(updateTrainer));
             status = response.getStatus();
             if (status != 201) {
                 _logger.error("Failed to update Trainer; Web service responded with: " + status);
@@ -113,7 +113,7 @@ public class TrainerResourceTest
             //now add a new trainer and test adding a contact
             TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12), new Record());
             response = client.target("http://localhost:10000/services/trainers")
-                    .request().post(Entity.xml(brock));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(brock));
             status = response.getStatus();
             if (status != 201) {
                 _logger.error("Failed to create Trainer; Web service responded with: " + status);
@@ -122,7 +122,7 @@ public class TrainerResourceTest
             location = response.getLocation().toString() + "/" + id;
             _logger.info("Trying to update contact at location: " + location);
             response.close();
-            response = client.target(location).request().put(null);
+            response = client.target(location).request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(null);
             status = response.getStatus();
             if (status != 201) {
                 _logger.error("Failed to add contact; Web service responded with: " + status);

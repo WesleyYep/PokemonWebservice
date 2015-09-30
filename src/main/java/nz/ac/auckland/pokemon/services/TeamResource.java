@@ -35,7 +35,7 @@ public class TeamResource {
 	 * described by a nz.ac.auckland.pokemon.dto.PokemonDTO object.
 	 *
 	 * @param teamDTO
-	 *            the Parolee data included in the HTTP request body.
+	 *            the Team data included in the HTTP request body.
 	 */
 	@POST
 	@Consumes("application/xml")

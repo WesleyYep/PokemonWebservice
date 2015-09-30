@@ -67,7 +67,7 @@ public class TeamResourceTest
             //now create team (trainer and pokemon are transient
             TeamDTO team = new TeamDTO("awesomeTeam", "A", null, null);
             Response response = client.target("http://localhost:10000/services/team?trainerId=" + trainerDTO.getId())
-                    .request().post(Entity.xml(team));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(team));
             int status = response.getStatus();
 
             if (status != 201) {
@@ -85,7 +85,7 @@ public class TeamResourceTest
 
             //now add a pokemon to the team
             response = client.target("http://localhost:10000/services/team/"+ id + "/updatePokemon")
-                    .request().put(Entity.xml(pokemonListDTO));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(Entity.xml(pokemonListDTO));
             status = response.getStatus();
 
             if (status != 201) {

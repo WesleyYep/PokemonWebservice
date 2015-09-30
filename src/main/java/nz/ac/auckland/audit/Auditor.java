@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -19,23 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An Auditor object acts as an interceptor on HTTP requests that arrive in a 
- * servlet container. The Auditor examines the request and stores a description 
- * of it in the database. Specifically, the Auditor stores the following for each
- * request:
- * - the CRUD operator
- * - the time at which the request was made
- * - the URI that was invoked
- * - the user (if known) who made the request
+ * This auditor has been extended to check that all users who want to make POST and PUT requests are authenticated (there are some exceptions for testing purposes).
+ * Anyone may perform GET requests, and the USER_ID of the audit entry will be null
  * 
- * The Auditor assumes the existence of two Entity classes, AuditEntry and User, 
- * that are appropriately decorated with persistence metadata.
- * 
- * Additionally, the Auditor assumes that requests may include a "username" 
- * cookie. When present, the Auditor uses the username value when persisting the
- * user. Otherwise, a value of UNKNOWN is recorded for the user.
- * 
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 public class Auditor implements ContainerRequestFilter {
@@ -58,25 +46,42 @@ public class Auditor implements ContainerRequestFilter {
 		Cookie cookieUsername = cookies.get("username");
 		Cookie cookiePassword = cookies.get("password");
 
-//		if (cookieUsername == null || cookiePassword == null) {
-//			cxt.abortWith(Response.status(403).type("text/plain")
-//					.entity("get lost, loser!").build());
-//		}
+		_logger.info("method type: " + cxt.getMethod());
+
+
+		//user registration POST, test/init and test/clearDB, and any GET methods are allowed by anyone
+		//or other POST and PUT must require a valid user cookie
+		if (!cxt.getUriInfo().getPath().contains("user") && !cxt.getUriInfo().getPath().contains("test")) {
+			_logger.info(cxt.getUriInfo().getPath());
+			if (!cxt.getMethod().equals("GET") && (cookieUsername == null || cookiePassword == null)) {
+				_logger.info("Sorry, you need to register to do this request.");
+				cxt.abortWith(Response.status(403).type("text/plain")
+						.entity("Sorry, you need to register to do this request.").build());
+			}
+		}
 
 		if(cookieUsername != null) {
 			username = cookieUsername.getValue();
 		}
 
-		EntityManager em = Persistence.createEntityManagerFactory("auditorPU")
+		EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 				.createEntityManager();
-		
+
 		// Start a transaction for persisting the audit data.
 		em.getTransaction().begin();
-		
+
 		// Fetch the User object corresponding to username. If there is no such
 		// user with that name, create a new User.
 		User user = fetchUser(em, username);
-		
+		if (!cxt.getUriInfo().getPath().contains("user") && !cxt.getUriInfo().getPath().contains("test") && !cxt.getMethod().equals("GET")) {
+			_logger.info(cxt.getUriInfo().getPath());
+			if (user == null || cookiePassword == null || !user.getPasswordHash().equals(cookiePassword.getValue())) {
+				_logger.info("Sorry, you need to register to do this request.");
+				cxt.abortWith(Response.status(403).type("text/plain")
+						.entity("Sorry, you need to register to do this request.").build());
+			}
+		}
+
 		// Create a new AuditEntry object to store details about the Web service
 		// invocation.
 		AuditEntry.CrudOperation crudOp = null;
@@ -93,7 +98,7 @@ public class Auditor implements ContainerRequestFilter {
 		}
 		String uri = cxt.getUriInfo().getRequestUri().toString();
 		AuditEntry auditable = new AuditEntry(crudOp, uri, user);
-		
+
 		// Persist the AuditEntry in the database.
 		em.persist(auditable);
 		em.getTransaction().commit();
@@ -108,10 +113,8 @@ public class Auditor implements ContainerRequestFilter {
 				).setParameter("username", username);
 			user = query.getSingleResult();
 		} catch(NoResultException e) {
-			// User doesn't exist in the database, so create a new User with the
-			// given username.
-			_logger.debug("Adding new user to the database: " + username);
-			user = new User(username);
+			// User doesn't exist in the database, so return null, which will return a 403 Not authenticated
+			return null;
 		}
 		return user;
 	}

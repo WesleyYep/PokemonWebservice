@@ -10,6 +10,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
@@ -36,7 +38,10 @@ public class UserResource {
         em.persist(user);
         em.getTransaction().commit();
 
-        return Response.created(URI.create("/user/" + user.getId()))
+        NewCookie cookieUsername = new NewCookie("username", "wesleyyep");
+        NewCookie cookiePassword = new NewCookie("password", PasswordHasher.passwordHash("password"));
+
+        return Response.created(URI.create("/user/" + user.getId())).cookie(cookieUsername).cookie(cookiePassword)
                 .build();
     }
 

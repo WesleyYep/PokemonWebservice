@@ -84,7 +84,7 @@ public class BattleResourceTest
 
 
             Response response = client2.target("http://localhost:10000/services/battles/challenge")
-                    .request().post(Entity.xml(john));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(john));
             int status = response.getStatus();
 
             if (status >= 400) {
@@ -111,7 +111,7 @@ public class BattleResourceTest
                 harry, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
 
         Response response = client.target("http://localhost:10000/services/battles")
-                .request().post(Entity.xml(defaultBattle));
+                .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(defaultBattle));
         int status = response.getStatus();
 
         _logger.info("Location: " + response.getLocation().toString());
@@ -149,7 +149,7 @@ public class BattleResourceTest
         // Send a HTTP PUT request to the Web service. The request URI is
         // that retrieved from the Web service (the response to the GET message)
         // and the message body is the above XML.
-        Response newResponse = client.target(location).request().put(Entity.xml(updateBattle));
+        Response newResponse = client.target(location).request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(Entity.xml(updateBattle));
         int status = newResponse.getStatus();
         if (status != 201) {
             _logger.error("Failed to update Battle; Web service responded with: " + status);

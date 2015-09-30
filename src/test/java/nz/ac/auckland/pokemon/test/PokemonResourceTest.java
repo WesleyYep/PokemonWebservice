@@ -62,7 +62,7 @@ public class PokemonResourceTest
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
             Response response = client.target("http://localhost:10000/services/pokemon")
-                    .request().post(Entity.xml(pikachu));
+                    .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(pikachu));
 
             // Expect a HTTP 201 "Created" response from the Web service.
             int status = response.getStatus();
@@ -104,7 +104,7 @@ public class PokemonResourceTest
             location += "/" + trainerId;
             _logger.info("URI for sending caught PUT request: " + location); //the location should be ..../pokemon_id/trainer_id
 
-            response = client.target(location).request().put(null);
+            response = client.target(location).request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(null);
             status = response.getStatus();
             if (status != 201) {
                 _logger.error("Failed to catch Pokemon; Web service responded with: " + status);
