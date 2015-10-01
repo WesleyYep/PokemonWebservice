@@ -25,8 +25,8 @@ import java.util.Set;
 import static org.junit.Assert.fail;
 
 /**
- * Simple JUnit test case to test the behaviour of the Parolee Web service.
- * The test basically uses the Web service to create a new Parolee, to query it,
+ * Simple JUnit test case to test the behaviour of the Pokemon Web service.
+ * The test basically uses the Web service to create a new Pokemon, to query it,
  * to update it and to requery it.
  *
  * The test is implemented using the JAX-RS client API, which will be covered
@@ -73,7 +73,7 @@ public class PokemonResourceTest
             }
 
             // Extract location header from the HTTP response message. This should
-            // give the URI for the newly created Trainer.
+            // give the URI for the newly created Pokemon.
             String location = response.getLocation().toString();
             _logger.info("URI for new Pokemon: " + location);
             String[] array = location.split("/");
@@ -102,7 +102,7 @@ public class PokemonResourceTest
             // and the message body is the above XML.
             //This PUT REQUEST should be called when a pokemon is caught by a trainer
             location += "/" + trainerId;
-            _logger.info("URI for sending caught PUT request: " + location); //the location should be ..../pokemon_id/trainer_id
+            _logger.info("URI for sending caught PUT request: " + location);
 
             response = client.target(location).request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(null);
             status = response.getStatus();

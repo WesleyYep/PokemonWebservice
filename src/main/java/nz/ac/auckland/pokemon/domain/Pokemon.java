@@ -12,8 +12,10 @@ import java.util.Set;
 /**
  * Bean class to represent a Pokemon.
  *
- * For this first Web service, a Pokemon is simply represented by a unique id,
+ * A Pokemon is simply represented by a unique id,
  * a name, nickname, gender and level.
+ *
+ * Pokemon each contain a set of moves and optionally may been "owned" by a trainer, and belong to a team of that trainer
  *
  * @author Wesley Yep
  *

@@ -13,6 +13,7 @@ import java.util.Set;
  * Bean class to represent a Pokemon trainer's record.
  *
  * It keeps track the trainers win/loss record, badges, and competition wins
+ * It is embedded inside a trainer Entity since a Record should not exist without the trainer that it belongs to
  *
  * @author Wesley Yep
  *

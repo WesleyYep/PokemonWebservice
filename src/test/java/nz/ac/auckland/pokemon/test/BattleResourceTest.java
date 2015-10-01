@@ -24,8 +24,8 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.fail;
 
 /**
- * Simple JUnit test case to test the behaviour of the Parolee Web service.
- * The test basically uses the Web service to create a new Parolee, to query it,
+ * Simple JUnit test case to test the behaviour of the Pokemon Web service.
+ * The test basically uses the Web service to create a new Battle, to query it,
  * to update it and to requery it.
  *
  * The test is implemented using the JAX-RS client API, which will be covered
@@ -74,15 +74,14 @@ public class BattleResourceTest
             _logger.info("sending post to battle accept");
 
             //new trainer will send a post request to accept the battle request from the first trainer
-            //this should actually occur before the previous callback
-            //TrainerDTO john = new TrainerDTO("smith", "john", Gender.MALE, new LocalDate(1960, 12, 12) , new Record());
 
-            //Query the Web service for a trainer
+            //Query the Web service for another trainer which we will use as the second trainer that accepts the battle
             _logger.info(("Querying trainer John"));
             TrainerDTO john = client2.target("http://localhost:10000/services/trainers?firstName=john&lastName=jones&dob=1991-07-07").request().get(TrainerDTO.class);
             _logger.info("Retrieved Trainer John:\n" + john.toString());
 
-
+            //send the POST request to server to accept the challenge
+            //this should actually occur before the previous callback
             Response response = client2.target("http://localhost:10000/services/battles/challenge")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(john));
             int status = response.getStatus();
@@ -100,6 +99,9 @@ public class BattleResourceTest
         }
     }
 
+    /**
+     * This is called by the callback method to create a battle once the response from server was resumed
+     */
     private void createBattle(TrainerDTO opponent) {
         Client client = ClientBuilder.newClient();
 
@@ -124,11 +126,15 @@ public class BattleResourceTest
         getBattleAndUpdate(response);
     }
 
+    /**
+     * After accepting the battle, now see if we can query the battle and the update it with a PUT request to signal that the battle has ended
+     * and that there is a winner
+     */
     private void getBattleAndUpdate(Response response) {
         Client client = ClientBuilder.newClient();
 
         // Extract location header from the HTTP response message. This should
-        // give the URI for the newly created Trainer.
+        // give the URI for the newly created Battle.
         String location = response.getLocation().toString();
         _logger.info("URI for new Battle: " + location);
         String[] array = location.split("/");
@@ -138,7 +144,7 @@ public class BattleResourceTest
         // Close the connection to the Web service.
         response.close();
 
-        // Query the Web service for the new Trainer. Send a HTTP GET request.
+        // Query the Web service for the new Battle. Send a HTTP GET request.
         _logger.info("Querying the Battle ...");
         BattleDTO battleDTO = client.target(location).request().get(BattleDTO.class);
         _logger.info("Retrieved Battle:\n" + battleDTO.toString());

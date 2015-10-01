@@ -59,6 +59,9 @@ public class TrainerResource {
 	 * @param id the unique id of the Trainer to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
 	 *         Trainer in XML format.
+	 *
+	 *         NOTE: this method is also able to return JSON formatted data
+	 *         for use in ajax client
 	 */
 	@GET
 	@Path("{id}")
@@ -78,6 +81,9 @@ public class TrainerResource {
 		return trainerDTO;
 	}
 
+	/**
+	 * Gets a trainer by name and dob
+	 */
 	@GET
 	@Produces("application/xml")
 	public TrainerDTO getTrainerByNameAndDOB(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
@@ -97,6 +103,12 @@ public class TrainerResource {
 		return trainerDTO;
 	}
 
+	/**
+	 * HATEOAS method for retrieving multiple trainers
+	 * @param start start index
+	 * @param size how many trainers to return at once
+	 * @return TrainerListDTO xml representation of a list of trainers
+	 */
 	@GET
 	@Path("all")
 	@Produces("application/xml")
@@ -135,12 +147,18 @@ public class TrainerResource {
 		return trainersDTO;
 	}
 
+	/**
+	 * HATEOAS method for retrieving multiple pokemon that belong to a trainer
+	 * @param start start index
+	 * @param size how many pokemon to return at once
+	 * @return PokemonListDTO xml representation of a list of pokemon
+	 */
 	@GET
 	@Path("{id}/getPokemon")
 	@Produces("application/xml")
 	public PokemonListDTO findAllPokemon(@QueryParam("start") int start, @QueryParam("size") int size, @PathParam("id") long trainerId) {
 		em.getTransaction().begin();
-
+	_logger.info("retrieving pokemon of trainer: " + trainerId);
 		List<Pokemon> pokemons = em.createQuery("SELECT p FROM Pokemon p").getResultList();
 		List<PokemonDTO> pokemonDTOs = new ArrayList<PokemonDTO>();
 		_logger.info("all pokemon number: " + pokemons.size());
@@ -180,6 +198,12 @@ public class TrainerResource {
 		return pokemonListDTO;
 	}
 
+	/**
+	 * HATEOAS method for retrieving multiple trainers which are the contacts of another trainer
+	 * @param start start index
+	 * @param size how many trainers to return at once
+	 * @return TrainerListDTO xml representation of a list of trainers
+	 */
 	@GET
 	@Path("{id}/getContacts")
 	@Produces("application/xml")
@@ -224,6 +248,12 @@ public class TrainerResource {
 		return trainersDTO;
 	}
 
+	/**
+	 * HATEOAS method for retrieving multiple battles that a trainer has been involved in
+	 * @param start start index
+	 * @param size how many battles to return at once
+	 * @return TrainerListDTO xml representation of a list of battles
+	 */
 	@GET
 	@Path("{id}/getBattles")
 	@Produces("application/xml")
@@ -269,6 +299,9 @@ public class TrainerResource {
 		return battleListDTO;
 	}
 
+	/**
+	 * Standard GET request to retrieve the team that has a certain id
+	 */
 	@GET
 	@Path("{id}/team")
 	@Produces("application/xml")

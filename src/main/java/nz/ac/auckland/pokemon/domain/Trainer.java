@@ -10,8 +10,10 @@ import java.util.*;
 /**
  * Bean class to represent a Trainer.
  *
- * For this first Web service, a Trainer is simply represented by a unique id,
+ * A Trainer is represented by a unique id,
  * a name, gender and date of birth.
+ *
+ * Trainers have a number of pokemon that they have caught, along with a trainer record and a list of trainer contacts
  *
  * @author Wesley Yep
  *

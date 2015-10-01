@@ -2,11 +2,10 @@ package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.domain.Team;
-import nz.ac.auckland.pokemon.domain.TeamDTO;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.dto.PokemonListDTO;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
+import nz.ac.auckland.pokemon.dto.TeamDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,7 @@ import java.net.URI;
 import java.util.*;
 
 /**
- * Webservice methods related to Pokemon creating, modifying, and catching
+ * Webservice methods related to Team creating, adding pokemon to teams, and retrieving.
  *
  * @author Wesley Yep
  *
@@ -31,8 +30,8 @@ public class TeamResource {
 			.createEntityManager();
 
 	/**
-	 * Adds a new Pokemon to the system. The state of the new Pokemon is
-	 * described by a nz.ac.auckland.pokemon.dto.PokemonDTO object.
+	 * Adds a new Team to the system. The state of the new Team is
+	 * described by a nz.ac.auckland.pokemon.dto.TeamDTO object.
 	 *
 	 * @param teamDTO
 	 *            the Team data included in the HTTP request body.
@@ -56,9 +55,9 @@ public class TeamResource {
 
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "pokemon/{id}.
-	 * @param id the unique id of the Trainer to retrieve.
+	 * @param id the unique id of the Team to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
-	 *         Trainer in XML format.
+	 *         Team in XML format.
 	 */
 	@GET
 	@Path("{id}")
@@ -79,10 +78,10 @@ public class TeamResource {
 	}
 
 	/**
-	 * Handles incoming HTTP GET requests for the relative URI "pokemon/{id}.
-	 * @param id the unique id of the Trainer to retrieve.
+	 * Handles incoming HTTP GET requests for the relative URI "team/{id}.
+	 * @param id the unique id of the Team to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
-	 *         Trainer in XML format.
+	 *         Team in XML format.
 	 */
 	@GET
 	@Path("{id}/pokemon")
@@ -109,17 +108,11 @@ public class TeamResource {
 		return pld;
 	}
 
-	public Collection<PokemonDTO> convertToCollection(Set<PokemonDTO> set) {
-		Collection<PokemonDTO> coll = new HashSet<PokemonDTO>();
-		coll.addAll(set);
-		return coll;
-	}
-
-
 	/**
-	 * Handles incoming HTTP PUT requests for the relative URI "pokemon/{id}.
-	 * a XML representation of the updated Trainer.
-	 * This is a standard PUT request that updates the pokemon
+	 * Handles incoming HTTP PUT requests for the relative URI "team/{id}/updatePokemon.
+	 * a XML representation of the updated Team.
+	 * This is PUT request adds pokemon to a team
+	 * The input is a xml list of pokemon as a DTO
 	 */
 	@PUT
 	@Path("{id}/updatePokemon")
@@ -130,7 +123,10 @@ public class TeamResource {
 		Team team = em.find(Team.class, id);
 		Set<Pokemon> pokemonSet = new HashSet<Pokemon>();
 		for (PokemonDTO pokemonDTO : pokemonListDTO.getPokemons()) {
-			pokemonSet.add(PokemonMapper.toDomainModel(pokemonDTO));
+			Pokemon p = PokemonMapper.toDomainModel(pokemonDTO);
+			//firstly ensure that the pokemon is owned by that trainer
+			p.setTrainer(team.getTrainer());
+			pokemonSet.add(p);
 		}
 		team.setPokemon(pokemonSet);
 		for (Pokemon p : pokemonSet) {
@@ -145,13 +141,13 @@ public class TeamResource {
 		em.getTransaction().commit();
 
 		_logger.debug("Updated team: " + id + "by adding " + pokemonListDTO.getPokemons().size() + " pokemon");
-        return Response.created(URI.create("/team/" + id))
-                .build();
+		return Response.created(URI.create("/team/" + id))
+				.build();
 	}
 
 	/**
-	 * Handles incoming HTTP PUT requests for the relative URI "pokemon/{id}/{trainerId}.
-	 * Clients will call this method and pass in both a Pokemon and Trainer DTO, represent the pokemon and the trainer that caught it
+	 * Handles incoming HTTP PUT requests for the relative URI "team/{id}.
+	 * Clients will call this method ato update the details of the team
 	 * .
 	 */
 	@PUT
@@ -163,7 +159,7 @@ public class TeamResource {
 		// Get the full pokemon and trainer object from the database.
 		Team team = em.find(Team.class, id);
 
-        // Update the details of the Trainer to be updated.
+		// Update the details of the Trainer to be updated.
 		team.setTeamName(teamDTO.getTeamName());
 		team.setTeamGrade(teamDTO.getTeamGrade());
 

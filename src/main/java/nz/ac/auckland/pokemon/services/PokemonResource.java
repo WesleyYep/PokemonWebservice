@@ -31,7 +31,7 @@ public class PokemonResource {
 	 * described by a nz.ac.auckland.pokemon.dto.PokemonDTO object.
 	 *
 	 * @param pokemonDTO
-	 *            the Parolee data included in the HTTP request body.
+	 *            the Pokemon data included in the HTTP request body.
 	 */
 	@POST
 	@Consumes("application/xml")
@@ -50,9 +50,9 @@ public class PokemonResource {
 
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "pokemon/{id}.
-	 * @param id the unique id of the Trainer to retrieve.
+	 * @param id the unique id of the Pokemon to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
-	 *         Trainer in XML format.
+	 *         Pokemon in XML format.
 	 */
 	@GET
 	@Path("{id}")
@@ -60,10 +60,10 @@ public class PokemonResource {
 	public PokemonDTO getPokemon(@PathParam("id") long id) {
 		_logger.debug("Retrieving pokemon: " + id);
 		em.getTransaction().begin();
-		// Get the full Parolee object from the database.
+		// Get the full Pokemon object from the database.
 		Pokemon pokemon = em.find(Pokemon.class, id);
 
-		// Convert the full Parolee to a short Parolee.
+		// Convert the full Pokemon to a short Pokemon.
 		PokemonDTO pokemonDTO = PokemonMapper.toDto(pokemon);
 		em.getTransaction().commit();
 
@@ -76,7 +76,7 @@ public class PokemonResource {
 
 	/**
 	 * Handles incoming HTTP PUT requests for the relative URI "pokemon/{id}.
-	 * a XML representation of the updated Trainer.
+	 * a XML representation of the updated Pokemon.
 	 * This is a standard PUT request that updates the pokemon
 	 */
 	@PUT

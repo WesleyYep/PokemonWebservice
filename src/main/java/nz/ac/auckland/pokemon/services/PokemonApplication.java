@@ -9,18 +9,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Application class for the Parolee Web service. This class is required by the 
+ * Application class for the Pokemon Web service. This class is required by the
  * JAX-RS implementation to deploy the Web service.
  *  
  * The relative path of the Web service beings with "services". If the Web 
- * server's address is "http://localhost:8080", the URI for hosted Web services
- * thus begins "http://localhost:8080/services". 
+ * server's address is "http://localhost:10000", the URI for hosted Web services
+ * thus begins "http://localhost:10000/services".
+ * The ajax client is accessed at "http://localhost:10000"
  * 
  * The TrainerResource specifies a URI path of "trainers", so this is appended,
- * making the Parolees Web service URI "http://localhost:8080/services/trainers".
+ * making the Trainer Web service URI "http://localhost:8080/services/trainers".
  *
  *  
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 @ApplicationPath("/services")
@@ -35,8 +36,8 @@ public class PokemonApplication extends Application
 	  singletons.add(new PokemonResource());
 	  singletons.add(new BattleResource());
 	  singletons.add(new UserResource());
-      singletons.add(new TestResource());
-      singletons.add(new TeamResource());
+	  singletons.add(new TestResource());
+	  singletons.add(new TeamResource());
 	  components.add(Auditor.class);
    }
 

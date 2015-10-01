@@ -2,33 +2,31 @@ package nz.ac.auckland.setup.test;
 
 import nz.ac.auckland.audit.User;
 import nz.ac.auckland.pokemon.services.PasswordHasher;
-import nz.ac.auckland.pokemon.test.TrainerResourceTest;
-import nz.ac.auckland.pokemon.test.BattleResourceTest;
-import nz.ac.auckland.pokemon.test.PokemonResourceTest;
-import org.junit.runners.Suite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
-
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import static org.junit.Assert.fail;
 
 /**
+ * This class is run before all other tests, and clears then resets the database to an initial state
+ *
+ * Also contains one test case which will launch the browser to test the Ajax Client
+ *
  * Created by Wesley on 26/09/2015.
  */
 public class InitialiseTest {
 
     public static Cookie cookieUsername;
     public static Cookie cookiePassword;
+    public static String webserviceURL = "http://localhost:10000";
     private static Logger _logger = LoggerFactory.getLogger(InitialiseTest.class);
 
     private static boolean initialize = true;
@@ -54,11 +52,14 @@ public class InitialiseTest {
         testAjaxClient();
     }
 
+    /**
+     * Open up a browser window to test the Ajax Client
+     */
     private static void testAjaxClient() {
         try {
             _logger.info("Testing Ajax client ...");
 
-            Desktop.getDesktop().browse(new URI("http://localhost:10000"));
+            Desktop.getDesktop().browse(new URI(webserviceURL));
             Thread.sleep(5000);
 
         } catch (IOException e) {
@@ -70,20 +71,29 @@ public class InitialiseTest {
         }
     }
 
+    /**
+     * Call the webservice method that initialises the database
+     */
     private static void initializeDatabase() {
         Client client = ClientBuilder.newClient();
-        client.target("http://localhost:10000/services/test/init")
+        client.target(webserviceURL + "/services/test/init")
                 .request().post(null);
         client.close();
     }
 
+    /**
+     * Call the webservice method that clears the database
+     */
     private static void clearDatabase() {
         Client client = ClientBuilder.newClient();
-        client.target("http://localhost:10000/services/test/clearAllDB")
+        client.target(webserviceURL + "/services/test/clearAllDB")
                 .request().post(null);
         client.close();
     }
 
+    /**
+     * Initialise a user by registering a username and password into the database
+     */
     private static void initializeUser () {
         Client client = ClientBuilder.newClient();
 
@@ -93,7 +103,7 @@ public class InitialiseTest {
             User wesley = new User("wesleyyep", "wesley", "yep", PasswordHasher.passwordHash("password"));
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
-            Response response = client.target("http://localhost:10000/services/user")
+            Response response = client.target( webserviceURL + "/services/user")
                     .request().post(Entity.xml(wesley));
             cookiePassword = response.getCookies().get("password");
             cookieUsername = response.getCookies().get("username");

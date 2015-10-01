@@ -5,19 +5,13 @@ import static org.junit.Assert.fail;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
-import nz.ac.auckland.pokemon.domain.Team;
-import nz.ac.auckland.pokemon.domain.TeamDTO;
-import nz.ac.auckland.pokemon.dto.BattleListDTO;
-import nz.ac.auckland.pokemon.dto.PokemonListDTO;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
+import nz.ac.auckland.pokemon.dto.*;
 
-import nz.ac.auckland.pokemon.dto.TrainerListDTO;
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
@@ -45,6 +39,10 @@ public class TrainerResourceTest
     @Test
     public void testsPass() {}
 
+    /**
+     * This method tests getting the JSON data from the web service, rather than XML
+     * This webservice method can produce both XML and JSON
+     */
     @Test
     public void testGetJSONTrainer() {
         Client client = ClientBuilder.newClient();
@@ -146,6 +144,9 @@ public class TrainerResourceTest
         }
     }
 
+    /**
+     * Test getting all the pokemon from a trainer
+     */
     @Test
     public void testTrainerResourceGetPokemon()
     {
@@ -167,12 +168,15 @@ public class TrainerResourceTest
         }
     }
 
+    /**
+     * Test getting the contacts of a trainer
+     */
     @Test
     public void testTrainerResourceGetContacts()
     {
         Client client = ClientBuilder.newClient();
         try {
-            //get a list of HATEOAS pokemon that have been caught by that trainer
+            //get a list of HATEOAS trainer that are contacts of that trainer
             _logger.info("Querying the Contacts list ...");
             TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers/4/getContacts")
                     .queryParam("start", 0)
@@ -188,12 +192,15 @@ public class TrainerResourceTest
         }
     }
 
+    /**
+     * Test getting battles of a trainer
+     */
     @Test
     public void testTrainerResourceGetBattles()
     {
         Client client = ClientBuilder.newClient();
         try {
-            //get a list of HATEOAS pokemon that have been caught by that trainer
+            //get a list of HATEOAS battles that have been fought by that trainer
             _logger.info("Querying the Contacts list ...");
             BattleListDTO battleListDTO = client.target("http://localhost:10000/services/trainers/1/getBattles")
                     .queryParam("start", 0)
@@ -209,6 +216,9 @@ public class TrainerResourceTest
         }
     }
 
+    /**
+     * Test getting the trainer's team
+     */
     @Test
     public void testTrainerResourceGetTeam() {
         Client client = ClientBuilder.newClient();
@@ -222,7 +232,7 @@ public class TrainerResourceTest
             PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/team/" + t.getId() + "/pokemon")
                     .request()
                     .get(PokemonListDTO.class);
-            _logger.info("Retrived team's pokemon - size of team: " + pokemonListDTO.getPokemons().size());
+            _logger.info("Retrieved team's pokemon - size of team: " + pokemonListDTO.getPokemons().size());
 
         } finally {
             client.close();

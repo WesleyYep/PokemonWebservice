@@ -1,16 +1,13 @@
 package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Team;
-import nz.ac.auckland.pokemon.domain.TeamDTO;
-import nz.ac.auckland.pokemon.domain.Trainer;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
-import org.joda.time.LocalDate;
+import nz.ac.auckland.pokemon.dto.TeamDTO;
 
 /**
  * Helper class to convert between domain-model and DTO objects representing
- * Parolees.
+ * Teams.
  * 
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 public class TeamMapper {

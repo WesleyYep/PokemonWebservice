@@ -3,9 +3,7 @@ package nz.ac.auckland.pokemon.test;
 import nz.ac.auckland.pokemon.domain.*;
 import nz.ac.auckland.pokemon.dto.*;
 import nz.ac.auckland.pokemon.services.PokemonMapper;
-import nz.ac.auckland.pokemon.services.TrainerMapper;
 import nz.ac.auckland.setup.test.InitialiseTest;
-import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -14,19 +12,15 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.fail;
 
 /**
- * Unit test for Testing the TrainerResource
+ * Unit test for Testing the TeamResource
  * The test is implemented using the JAX-RS client API
  *
  * @author Wesley Yep
@@ -50,10 +44,10 @@ public class TeamResourceTest
         Client client = ClientBuilder.newClient();
         try {
             //firstly get the trainer called jesse
-            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers?firstName=jesse&lastName=smith&dob=1990-03-12")
+            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers?firstName=jesse&lastName=parker&dob=1990-03-12")
                     .request()
                     .get(TrainerDTO.class);
-
+            //_logger.info("team test: trainer = " + trainerDTO.toString());
             //now get some of jesse's pokemon
             PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/trainers/" + trainerDTO.getId() + "/getPokemon?start=0&size=3")
                     .request()
@@ -100,6 +94,10 @@ public class TeamResourceTest
         }
     }
 
+    /**
+     * Test querying the team details
+     * Then test querying the pokemon that belongs to that team
+     */
     @Test
     public void testGetTeam() {
         Client client = ClientBuilder.newClient();

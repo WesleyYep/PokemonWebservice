@@ -29,6 +29,9 @@ public class TestResource {
     private static EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
             .createEntityManager();
 
+    /**
+     * Clears the database before the tests are run
+     */
     @POST
     @Path("clearAllDB")
     public void clearDatabase() {
@@ -46,6 +49,10 @@ public class TestResource {
         em.createNativeQuery("drop table USER").executeUpdate();
         em.getTransaction().commit();
     }
+
+    /**
+     * Sets up the database with some data
+     */
     @POST
     @Path("init")
     public void initialiseDatabase() {
@@ -60,7 +67,7 @@ public class TestResource {
 
         Trainer james = new Trainer(0, "smith", "james", Gender.MALE, new LocalDate(1992, 12, 6).toDateTimeAtStartOfDay().toDate(), r1);
         Trainer john = new Trainer(0, "jones", "john", Gender.MALE, new LocalDate(1991, 7, 7).toDateTimeAtStartOfDay().toDate(), r2);
-        Trainer jesse = new Trainer(0, "smith", "jesse", Gender.FEMALE, new LocalDate(1990, 3, 12).toDateTimeAtStartOfDay().toDate(), r3);
+        Trainer jesse = new Trainer(0, "parker", "jesse", Gender.FEMALE, new LocalDate(1990, 3, 12).toDateTimeAtStartOfDay().toDate(), r3);
         Trainer tom = new Trainer(0, "riddle", "tom", Gender.MALE, new LocalDate(1995, 4, 24).toDateTimeAtStartOfDay().toDate(), r4);
         Trainer harry = new Trainer(0, "potter", "harry", Gender.MALE, new LocalDate(1997, 2, 16).toDateTimeAtStartOfDay().toDate(), r5);
 
@@ -91,9 +98,9 @@ public class TestResource {
         Pokemon gengar = new Pokemon(0, "gengar", "ghostly", Gender.FEMALE, 60, new HashSet<Move>(Arrays.asList(nightslash, destinybond, thunderbolt)));
         Pokemon machamp = new Pokemon(0, "machamp", "champion", Gender.MALE, 29, new HashSet<Move>(Arrays.asList(dynamicpunch)));
         Pokemon raichu = new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
-        Pokemon charmander = new Pokemon(0, "raichu", "electric rat", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon charmander = new Pokemon(0, "charmander", "fire lizard", Gender.FEMALE, 67, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
         Pokemon charmeleon = new Pokemon(0, "charmeleon", "charmeleon", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
-        Pokemon charizard = new Pokemon(0, "charizard", "electric rat", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
+        Pokemon charizard = new Pokemon(0, "charizard", "bigfirelizard", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
         Pokemon bulbasaur = new Pokemon(0, "bulbasaur", "bulbasaur", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
         Pokemon ivysaur = new Pokemon(0, "ivysaur", "ivysaur", Gender.MALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));
         Pokemon venusaur = new Pokemon(0, "venusaur", "venusaur", Gender.FEMALE, 99, new HashSet<Move>(Arrays.asList(thunderbolt, bugbuzz)));

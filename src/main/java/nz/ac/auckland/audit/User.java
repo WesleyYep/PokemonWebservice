@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.*;
 
+/**
+ * Based on the User class of part 2 of the assignment
+ * Modified to contain a password hash for security reasons and to authenticate the user
+ */
 @Entity
 @XmlRootElement(name="user")
 @XmlAccessorType(XmlAccessType.FIELD)

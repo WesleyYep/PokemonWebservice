@@ -7,9 +7,9 @@ import org.joda.time.LocalDate;
 
 /**
  * Helper class to convert between domain-model and DTO objects representing
- * Parolees.
+ * Trainers.
  * 
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 public class TrainerMapper {

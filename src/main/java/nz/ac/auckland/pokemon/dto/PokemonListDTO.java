@@ -11,6 +11,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * Class to represent a PokemonList Data Transmission Object.
+ * It has HATEOAS support using a list of links which would contain the next and previous links
+ *
+ * An instance of this class represents a DTO list of pokemon, for being translated into XML and being passed between client/server
  * Created by Wesley on 26/09/2015.
  */
 @XmlRootElement(name = "pokemons")

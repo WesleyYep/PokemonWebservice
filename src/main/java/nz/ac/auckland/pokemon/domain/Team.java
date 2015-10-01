@@ -10,38 +10,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Bean class to represent a Pokemon trainer's record.
+ * Bean class to represent a Pokemon trainer's team.
  *
- * It keeps track the trainers win/loss record, badges, and competition wins
+ * It keeps track the trainers team name, grade, the trainer which it belongs to, and the pokemon in that team
+ * A trainer should only have one team at a time
  *
  * @author Wesley Yep
  *
  */
 
 @Entity
-//@XmlRootElement(name="team")
-//@XmlAccessorType(XmlAccessType.FIELD)
 public class Team {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-//	@XmlAttribute(name="id")
 	private long id;
 
-//	@XmlElement(name="teamName")
 	private String teamName;
 
-//	@XmlElement(name="teamGrade")
 	private String teamGrade;
 
-//	@XmlElement(name="trainer")
 	@OneToOne(optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(unique = true)
 	private Trainer trainer;
 
-//	@XmlElement(name="pokemonList")
 	@OneToMany(mappedBy = "team")
-//	@JoinColumn(name = "TEAM_ID", nullable = true)
 	private Set<Pokemon> pokemon = new HashSet<Pokemon>();
 
 	protected Team() {	}

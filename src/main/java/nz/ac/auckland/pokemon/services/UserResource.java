@@ -27,8 +27,8 @@ public class UserResource {
             .createEntityManager();
 
     /**
-     * For now, create a battle by passing in a single BattleDBO
-     * This may change later to pass in a single Trainer object to register for a battle
+     * Register a user in the database
+     * This method is not subject to the authorization that is needed for the other POST and PUT requests
      */
     @POST
     @Consumes("application/xml")

@@ -10,8 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Bean class to represent a Pokemon move.
  *
- * For this first Web service, a Move is simply represented by a unique id,
+ * A Move is represented by a unique id,
  * a name, attack power, accuracy, and type.
+ *
+ * Pokemon can have a nultiple number of moves. Some pokemon may share the same move
  *
  * @author Wesley Yep
  *
@@ -22,18 +24,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Move {
 
-    @XmlElement(name="name")
-    private String name;
+	@XmlElement(name="name")
+	private String name;
 
-    @XmlElement(name="power")
-    private int power;
+	@XmlElement(name="power")
+	private int power;
 
-    @XmlElement(name="accuracy")
-    private int accuracy;
+	@XmlElement(name="accuracy")
+	private int accuracy;
 
-    @XmlElement(name="type")
-    @Enumerated
-    private Type type;
+	@XmlElement(name="type")
+	@Enumerated
+	private Type type;
 	
 	public Move() {}
 

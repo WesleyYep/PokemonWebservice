@@ -66,6 +66,8 @@ public class BattleResource {
 	
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "battles/{id}.
+	 * The server will add the client to the list of trainers waiting for a battle
+	 * Adds the request to the async list, ready to be resumed when server changes state (by receiving an accept battle post)
 	 */
 	@GET
 	@Path("/challenge")
@@ -75,6 +77,11 @@ public class BattleResource {
 		responses.add(response); //register as looking for a battle
 	}
 
+	/**
+	 * Resumes the oldest response that has not yet been dealt with. The response is passed the details of the trainer that accepted the battle and resumed
+	 *
+	 * @param trainer the trainer that accepted the battle
+	 */
 	@POST
 	@Path("/challenge")
 	@Consumes("application/xml")
@@ -85,14 +92,12 @@ public class BattleResource {
 			responses.remove(responses.size()-1).resume(trainer); //tell the the first trainer that this trainer is accepting their battle request
 		}
 	}
-
-	
 	
 	/**
 	 * Handles incoming HTTP GET requests for the relative URI "battles/{id}.
-	 * @param id the unique id of the Trainer to retrieve.
+	 * @param id the unique id of the Battle to retrieve.
 	 * @return a StreamingOutput object storing a representation of the required
-	 *         Trainer in XML format.
+	 *         Battle in XML format.
 	 */
 	@GET
 	@Path("{id}")
@@ -112,8 +117,7 @@ public class BattleResource {
 
 	/**
 	 * Handles incoming HTTP PUT requests for the relative URI "battles/{id}.
-	 * a XML representation of the updated Trainer.
-	 * This is a standard PUT request that updates the pokemon
+	 * This is a standard PUT request that ends the battle and gives it a end time and sets the winner
 	 */
 	@PUT
 	@Path("{id}")

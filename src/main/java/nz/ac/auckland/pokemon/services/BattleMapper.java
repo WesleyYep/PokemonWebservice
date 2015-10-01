@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
 
 /**
  * Helper class to convert between domain-model and DTO objects representing
- * Parolees.
+ * Battles.
  * 
- * @author Ian Warren
+ * @author Wesley Yep
  *
  */
 public class BattleMapper {

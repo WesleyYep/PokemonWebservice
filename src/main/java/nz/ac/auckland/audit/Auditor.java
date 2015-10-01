@@ -20,9 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This auditor has been extended to check that all users who want to make POST and PUT requests are authenticated (there are some exceptions for testing purposes).
+ * This auditor interceptor has been extended to check that all users who want to make POST and PUT requests are authenticated (there are some exceptions for testing purposes).
  * Anyone may perform GET requests, and the USER_ID of the audit entry will be null
- * 
+ * All requests will be stored in the AuditEntry table in the database
+ *
  * @author Wesley Yep
  *
  */
@@ -46,13 +47,12 @@ public class Auditor implements ContainerRequestFilter {
 		Cookie cookieUsername = cookies.get("username");
 		Cookie cookiePassword = cookies.get("password");
 
-		_logger.info("method type: " + cxt.getMethod());
-
+		//_logger.info("method type: " + cxt.getMethod());
 
 		//user registration POST, test/init and test/clearDB, and any GET methods are allowed by anyone
 		//or other POST and PUT must require a valid user cookie
 		if (!cxt.getUriInfo().getPath().contains("user") && !cxt.getUriInfo().getPath().contains("test")) {
-			_logger.info(cxt.getUriInfo().getPath());
+	//		_logger.info(cxt.getUriInfo().getPath());
 			if (!cxt.getMethod().equals("GET") && (cookieUsername == null || cookiePassword == null)) {
 				_logger.info("Sorry, you need to register to do this request.");
 				cxt.abortWith(Response.status(403).type("text/plain")
@@ -67,7 +67,7 @@ public class Auditor implements ContainerRequestFilter {
 		EntityManager em = Persistence.createEntityManagerFactory("pokemonPU")
 				.createEntityManager();
 
-		// Start a transaction for persisting the audit data.
+		// Start a transaction for persisting the audit data and getting the user from the database.
 		em.getTransaction().begin();
 
 		// Fetch the User object corresponding to username. If there is no such

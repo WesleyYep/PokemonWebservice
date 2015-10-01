@@ -2,9 +2,7 @@ package nz.ac.auckland.pokemon.domain;
 
 /**
  * Simple enumeration for representing Gender.
- * 
- * @author Ian Warren
- *
+ * Code borrowed from parolee.Gender from the example project
  */
 
 public enum Gender {

@@ -6,6 +6,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Helper class for hashing a password so that it is not stored or sent in plain text
+ * Uses the SHA-256 hash algorithm
+ *
  * Created by Wesley on 27/09/2015.
  */
 public class PasswordHasher {

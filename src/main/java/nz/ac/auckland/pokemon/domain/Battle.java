@@ -14,6 +14,8 @@ import java.util.Set;
 
 /**
  * Represents a pokemon battle between two trainers
+ * Also contains a location where the battle is occurring
+ * Battles have a start and ent time
  *
  * Created by Wesley on 24/09/2015.
  */

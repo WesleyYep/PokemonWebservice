@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 
+/**
+ * From Part 2 of the assignment
+ * Represents the audit entry in a database table
+ */
 @Entity
 public class AuditEntry {
 	
