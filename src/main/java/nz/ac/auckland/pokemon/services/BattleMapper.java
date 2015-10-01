@@ -1,9 +1,7 @@
 package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Battle;
-import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
-import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import org.joda.time.DateTime;
 
 /**

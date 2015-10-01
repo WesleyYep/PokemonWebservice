@@ -1,21 +1,16 @@
 package nz.ac.auckland.audit;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Request;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

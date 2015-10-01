@@ -8,7 +8,6 @@ import nz.ac.auckland.pokemon.dto.PokemonListDTO;
 import nz.ac.auckland.pokemon.dto.TeamDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;

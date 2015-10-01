@@ -1,9 +1,6 @@
 package nz.ac.auckland.pokemon.services;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Helper class for hashing a password so that it is not stored or sent in plain text

@@ -1,31 +1,20 @@
 package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Battle;
-import nz.ac.auckland.pokemon.domain.GeoPosition;
-import nz.ac.auckland.pokemon.domain.Pokemon;
-import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
-import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Webservice methods related to Pokemon battles between trainers

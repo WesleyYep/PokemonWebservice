@@ -7,7 +7,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
-
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
@@ -52,7 +51,7 @@ public class AuthenticationTest
               TrainerDTO misty = new TrainerDTO("mistylastname", "misty", Gender.FEMALE, new LocalDate(1978, 2, 3), new Record());
               // Send a HTTP POST message, with a message body containing the XML,
               // to the Web service.
-              Response response = client.target("http://localhost:10000/services/trainers")
+              Response response = client.target(InitialiseTest.webserviceURL + "/services/trainers")
                       .request().post(Entity.xml(misty));
 
 	         // Expect a 403 "Unauthorised"response from the Web service.
@@ -85,7 +84,7 @@ public class AuthenticationTest
           TrainerDTO dawn = new TrainerDTO("piplup", "dawn", Gender.FEMALE, new LocalDate(1968, 12, 5), new Record());
 
           Cookie cookie = new Cookie("username","test");
-          Response response = client.target("http://localhost:10000/services/trainers")
+          Response response = client.target(InitialiseTest.webserviceURL + "/services/trainers")
                  .request().cookie(cookie).post(Entity.xml(dawn));
 
          // Expect a HTTP 403 "Unauthorised" response from the Web service.

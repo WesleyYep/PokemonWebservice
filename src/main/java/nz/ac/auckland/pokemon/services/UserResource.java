@@ -3,19 +3,19 @@ package nz.ac.auckland.pokemon.services;
 import nz.ac.auckland.audit.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
 /**
+ * This Resource class contains the webservice method to create a new user in the database
+ *
  * Created by Wesley on 26/09/2015.
  */
 @Path("/user")

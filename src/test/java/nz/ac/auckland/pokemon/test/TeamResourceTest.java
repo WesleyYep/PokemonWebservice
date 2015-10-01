@@ -8,12 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +42,12 @@ public class TeamResourceTest
         Client client = ClientBuilder.newClient();
         try {
             //firstly get the trainer called jesse
-            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers?firstName=jesse&lastName=parker&dob=1990-03-12")
+            TrainerDTO trainerDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers?firstName=jesse&lastName=parker&dob=1990-03-12")
                     .request()
                     .get(TrainerDTO.class);
             //_logger.info("team test: trainer = " + trainerDTO.toString());
             //now get some of jesse's pokemon
-            PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/trainers/" + trainerDTO.getId() + "/getPokemon?start=0&size=3")
+            PokemonListDTO pokemonListDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/" + trainerDTO.getId() + "/getPokemon?start=0&size=3")
                     .request()
                     .get(PokemonListDTO.class);
 
@@ -60,7 +58,7 @@ public class TeamResourceTest
 
             //now create team (trainer and pokemon are transient
             TeamDTO team = new TeamDTO("awesomeTeam", "A", null, null);
-            Response response = client.target("http://localhost:10000/services/team?trainerId=" + trainerDTO.getId())
+            Response response = client.target(InitialiseTest.webserviceURL + "/services/team?trainerId=" + trainerDTO.getId())
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(team));
             int status = response.getStatus();
 
@@ -78,7 +76,7 @@ public class TeamResourceTest
             response.close();
 
             //now add a pokemon to the team
-            response = client.target("http://localhost:10000/services/team/"+ id + "/updatePokemon")
+            response = client.target(InitialiseTest.webserviceURL + "/services/team/"+ id + "/updatePokemon")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).put(Entity.xml(pokemonListDTO));
             status = response.getStatus();
 
@@ -104,12 +102,12 @@ public class TeamResourceTest
         try {
             //get the team with id = 2
             _logger.info("Querying the Team: 2");
-            TeamDTO t = client.target("http://localhost:10000/services/team/2")
+            TeamDTO t = client.target(InitialiseTest.webserviceURL + "/services/team/2")
                     .request()
                     .get(TeamDTO.class);
             _logger.info("Retrieved team: " + t);
 
-            PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/team/" + t.getId() + "/pokemon")
+            PokemonListDTO pokemonListDTO = client.target(InitialiseTest.webserviceURL + "/services/team/" + t.getId() + "/pokemon")
                     .request()
                     .get(PokemonListDTO.class);
             _logger.info("Retrieved team's pokemon - size of team: " + pokemonListDTO.getPokemons().size());

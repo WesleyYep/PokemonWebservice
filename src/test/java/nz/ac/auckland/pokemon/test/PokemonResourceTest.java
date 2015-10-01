@@ -7,18 +7,15 @@ import nz.ac.auckland.pokemon.domain.Type;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import nz.ac.auckland.pokemon.services.PokemonMapper;
-
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +58,7 @@ public class PokemonResourceTest
             PokemonDTO pikachu = new PokemonDTO("pikachu", "pika", Gender.MALE, 5, moves, null);
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
-            Response response = client.target("http://localhost:10000/services/pokemon")
+            Response response = client.target(InitialiseTest.webserviceURL + "/services/pokemon")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(pikachu));
 
             // Expect a HTTP 201 "Created" response from the Web service.
@@ -91,7 +88,7 @@ public class PokemonResourceTest
 
             //Query the Web service for a trainer
             _logger.info(("Querying trainer James"));
-            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers?firstName=james&lastName=smith&dob=1992-12-06").request().get(TrainerDTO.class);
+            TrainerDTO trainerDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers?firstName=james&lastName=smith&dob=1992-12-06").request().get(TrainerDTO.class);
             _logger.info("Retrieved Trainer James:\n" + trainerDTO.toString());
 
             long trainerId = trainerDTO.getId();

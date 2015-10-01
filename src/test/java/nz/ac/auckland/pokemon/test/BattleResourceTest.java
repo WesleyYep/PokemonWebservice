@@ -1,24 +1,15 @@
 package nz.ac.auckland.pokemon.test;
 
-import nz.ac.auckland.pokemon.domain.Battle;
-import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.GeoPosition;
-import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.BattleDTO;
 import nz.ac.auckland.pokemon.dto.TrainerDTO;
-
-import nz.ac.auckland.pokemon.services.BattleMapper;
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.fail;
@@ -58,7 +49,7 @@ public class BattleResourceTest
 
         try {
             //now get one client to send battle request and accept request asynchronously
-            final WebTarget target = client.target("http://localhost:10000/services/battles/challenge");
+            final WebTarget target = client.target(InitialiseTest.webserviceURL + "/services/battles/challenge");
     		target.request()
     				 .async()
             		 .get(new InvocationCallback<TrainerDTO>() {
@@ -77,12 +68,12 @@ public class BattleResourceTest
 
             //Query the Web service for another trainer which we will use as the second trainer that accepts the battle
             _logger.info(("Querying trainer John"));
-            TrainerDTO john = client2.target("http://localhost:10000/services/trainers?firstName=john&lastName=jones&dob=1991-07-07").request().get(TrainerDTO.class);
+            TrainerDTO john = client2.target(InitialiseTest.webserviceURL + "/services/trainers?firstName=john&lastName=jones&dob=1991-07-07").request().get(TrainerDTO.class);
             _logger.info("Retrieved Trainer John:\n" + john.toString());
 
             //send the POST request to server to accept the challenge
             //this should actually occur before the previous callback
-            Response response = client2.target("http://localhost:10000/services/battles/challenge")
+            Response response = client2.target(InitialiseTest.webserviceURL + "/services/battles/challenge")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(john));
             int status = response.getStatus();
 
@@ -106,13 +97,13 @@ public class BattleResourceTest
         Client client = ClientBuilder.newClient();
 
         _logger.info(("Querying trainer Harry"));
-        TrainerDTO harry = client.target("http://localhost:10000/services/trainers?firstName=harry&lastName=potter&dob=1997-02-16").request().get(TrainerDTO.class);
+        TrainerDTO harry = client.target(InitialiseTest.webserviceURL + "/services/trainers?firstName=harry&lastName=potter&dob=1997-02-16").request().get(TrainerDTO.class);
         _logger.info("Retrieved Trainer Harry:\n" + harry.toString());
 
         BattleDTO defaultBattle = new BattleDTO(new DateTime(2015, 9, 24, 21, 57), new DateTime(2015, 9, 24, 21, 57),
                 harry, opponent, 19, new GeoPosition(120.0, 40.20)); //end time is initially same as start time
 
-        Response response = client.target("http://localhost:10000/services/battles")
+        Response response = client.target(InitialiseTest.webserviceURL + "/services/battles")
                 .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(defaultBattle));
         int status = response.getStatus();
 

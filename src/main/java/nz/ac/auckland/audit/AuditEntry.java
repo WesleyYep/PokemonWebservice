@@ -1,15 +1,7 @@
 package nz.ac.auckland.audit;
 
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 
 /**
@@ -24,7 +16,8 @@ public class AuditEntry {
 	@Id
 	@GeneratedValue(  generator = "ID_GENERATOR" )
 	private Long _id;
-	
+
+	@Enumerated(value = EnumType.STRING)
 	private CrudOperation _crudOperator;
 	
 	private String _uri;

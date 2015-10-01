@@ -4,7 +4,6 @@ import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import javax.xml.bind.annotation.*;
 import java.util.HashSet;
 import java.util.Set;

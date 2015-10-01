@@ -1,17 +1,14 @@
 package nz.ac.auckland.pokemon.test;
 
 import static org.junit.Assert.fail;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.Record;
 import nz.ac.auckland.pokemon.dto.*;
-
 import nz.ac.auckland.setup.test.InitialiseTest;
 import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
@@ -47,7 +44,7 @@ public class TrainerResourceTest
     public void testGetJSONTrainer() {
         Client client = ClientBuilder.newClient();
         try {
-            TrainerDTO trainerDTO = client.target("http://localhost:10000/services/trainers/1").request().accept(MediaType.APPLICATION_JSON).get(TrainerDTO.class);
+            TrainerDTO trainerDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/1").request().accept(MediaType.APPLICATION_JSON).get(TrainerDTO.class);
             _logger.info("Got Trainer from json: " + trainerDTO.toString());
         } finally {
             client.close();
@@ -66,7 +63,7 @@ public class TrainerResourceTest
             TrainerDTO ash = new TrainerDTO("ketchum", "ash", Gender.MALE, new LocalDate(1958, 5, 17), new Record());
             // Send a HTTP POST message, with a message body containing the XML,
             // to the Web service.
-            Response response = client.target("http://localhost:10000/services/trainers")
+            Response response = client.target(InitialiseTest.webserviceURL + "/services/trainers")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(ash));
 
             // Expect a HTTP 201 "Created" response from the Web service.
@@ -110,7 +107,7 @@ public class TrainerResourceTest
 
             //now add a new trainer and test adding a contact
             TrainerDTO brock = new TrainerDTO("Harrison", "Brock", Gender.MALE, new LocalDate(1999, 4, 12), new Record());
-            response = client.target("http://localhost:10000/services/trainers")
+            response = client.target(InitialiseTest.webserviceURL + "/services/trainers")
                     .request().cookie(InitialiseTest.cookieUsername).cookie(InitialiseTest.cookiePassword).post(Entity.xml(brock));
             status = response.getStatus();
             if (status != 201) {
@@ -130,7 +127,7 @@ public class TrainerResourceTest
 
             //now get a list of HATEOAS trainers
             _logger.info("Querying the Trainer list ...");
-            TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers/all")
+            TrainerListDTO trainerListDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/all")
                     .queryParam("start", 0)
                     .queryParam("size", 3)
                     .request()
@@ -154,7 +151,7 @@ public class TrainerResourceTest
         try {
             //get a list of HATEOAS pokemon that have been caught by that trainer
             _logger.info("Querying the Trainer list ...");
-            PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/trainers/1/getPokemon")
+            PokemonListDTO pokemonListDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/1/getPokemon")
                     .queryParam("start", 0)
                     .queryParam("size", 3)
                     .request()
@@ -178,7 +175,7 @@ public class TrainerResourceTest
         try {
             //get a list of HATEOAS trainer that are contacts of that trainer
             _logger.info("Querying the Contacts list ...");
-            TrainerListDTO trainerListDTO = client.target("http://localhost:10000/services/trainers/4/getContacts")
+            TrainerListDTO trainerListDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/4/getContacts")
                     .queryParam("start", 0)
                     .queryParam("size", 3)
                     .request()
@@ -202,7 +199,7 @@ public class TrainerResourceTest
         try {
             //get a list of HATEOAS battles that have been fought by that trainer
             _logger.info("Querying the Contacts list ...");
-            BattleListDTO battleListDTO = client.target("http://localhost:10000/services/trainers/1/getBattles")
+            BattleListDTO battleListDTO = client.target(InitialiseTest.webserviceURL + "/services/trainers/1/getBattles")
                     .queryParam("start", 0)
                     .queryParam("size", 3)
                     .request()
@@ -224,12 +221,12 @@ public class TrainerResourceTest
         Client client = ClientBuilder.newClient();
         try {
             _logger.info("Querying the trainer's team...");
-             TeamDTO t = client.target("http://localhost:10000/services/trainers/1/team")
+             TeamDTO t = client.target(InitialiseTest.webserviceURL + "/services/trainers/1/team")
                     .request()
                     .get(TeamDTO.class);
             _logger.info("Retrieved the team: " + t.getTeamName());
 
-            PokemonListDTO pokemonListDTO = client.target("http://localhost:10000/services/team/" + t.getId() + "/pokemon")
+            PokemonListDTO pokemonListDTO = client.target(InitialiseTest.webserviceURL + "/services/team/" + t.getId() + "/pokemon")
                     .request()
                     .get(PokemonListDTO.class);
             _logger.info("Retrieved team's pokemon - size of team: " + pokemonListDTO.getPokemons().size());

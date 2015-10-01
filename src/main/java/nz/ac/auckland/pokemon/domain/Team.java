@@ -1,11 +1,8 @@
 package nz.ac.auckland.pokemon.domain;
 
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
 import java.util.HashSet;
 import java.util.Set;
 

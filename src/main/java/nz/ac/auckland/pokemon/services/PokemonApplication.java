@@ -2,9 +2,7 @@ package nz.ac.auckland.pokemon.services;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-
 import nz.ac.auckland.audit.Auditor;
-
 import java.util.HashSet;
 import java.util.Set;
 

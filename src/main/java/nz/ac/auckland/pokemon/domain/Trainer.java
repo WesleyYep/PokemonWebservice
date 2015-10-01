@@ -3,7 +3,6 @@ package nz.ac.auckland.pokemon.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
-
 import javax.persistence.*;
 import java.util.*;
 

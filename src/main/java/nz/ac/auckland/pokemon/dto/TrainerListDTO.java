@@ -1,7 +1,5 @@
 package nz.ac.auckland.pokemon.dto;
 
-import nz.ac.auckland.pokemon.domain.Trainer;
-
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;

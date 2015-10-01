@@ -1,23 +1,12 @@
 package nz.ac.auckland.pokemon.dto;
 
-import nz.ac.auckland.pokemon.domain.Gender;
 import nz.ac.auckland.pokemon.domain.GeoPosition;
-import nz.ac.auckland.pokemon.domain.Move;
-import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.jaxb.DateTimeAdapter;
-import nz.ac.auckland.pokemon.jaxb.LocalDateAdapter;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-
-import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import java.util.Date;
-import java.util.Set;
 
 /** Class to represent a Battle Data Transmission Object.
  *

@@ -1,25 +1,21 @@
 package nz.ac.auckland.pokemon.services;
 
-import nz.ac.auckland.audit.User;
 import nz.ac.auckland.pokemon.domain.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.security.Policy;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 
 /**
+ * This contains the webservice methods that are needed to reset and initialise the database
+ *
  * Created by Wesley on 26/09/2015.
+ *
  */
 @Path("/test")
 public class TestResource {

@@ -1,16 +1,9 @@
 package nz.ac.auckland.pokemon.domain;
 
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.joda.time.DateTime;
-
 import javax.persistence.*;
-
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Represents a pokemon battle between two trainers

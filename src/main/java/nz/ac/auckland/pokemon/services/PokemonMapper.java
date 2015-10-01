@@ -1,10 +1,7 @@
 package nz.ac.auckland.pokemon.services;
 
 import nz.ac.auckland.pokemon.domain.Pokemon;
-import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
-import org.joda.time.LocalDate;
 
 /**
  * Helper class to convert between domain-model and DTO objects representing

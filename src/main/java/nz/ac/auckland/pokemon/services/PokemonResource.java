@@ -3,10 +3,8 @@ package nz.ac.auckland.pokemon.services;
 import nz.ac.auckland.pokemon.domain.Pokemon;
 import nz.ac.auckland.pokemon.domain.Trainer;
 import nz.ac.auckland.pokemon.dto.PokemonDTO;
-import nz.ac.auckland.pokemon.dto.TrainerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;

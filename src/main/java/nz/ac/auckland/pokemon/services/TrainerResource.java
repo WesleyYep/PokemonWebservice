@@ -9,7 +9,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import nz.ac.auckland.pokemon.domain.*;
 import nz.ac.auckland.pokemon.dto.*;
 import org.slf4j.Logger;
@@ -72,7 +71,7 @@ public class TrainerResource {
 		// Get the full Trainer object from the database.
 		Trainer trainer = em.find(Trainer.class, id);
 
-		// Convert the full Trainer to a short Parolee.
+		// Convert the full Trainer to a short Trainer.
 		TrainerDTO trainerDTO = TrainerMapper.toDto(trainer);
 		em.getTransaction().commit();
 
